@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+{% load static %} <!-- Carrega a tag static do Django -->
+<html lang="pt-br">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Cropper.js</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="{% static 'plugins/cropper/bootstrap.min.css' %}" crossorigin="anonymous">
+  <!-- Cropper.js CSS -->
+  <link rel="stylesheet" href="{% static 'plugins/cropper/cropper.css' %}">
+  <style>
+    .img-container img {
+      max-width: 100%;
+    }
+    #uploadedImage {
+      max-width: 300px; /* Ajuste conforme necessário */
+      display: block;
+      margin: 0 auto 20px auto; /* Centraliza a imagem */
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Upload e corte de imagem</h1>
+    <img id="uploadedImage" src="https://static.vecteezy.com/ti/vetor-gratis/p1/2331588-icone-identidade-oculta-pessoa-desconhecida-vetor.jpg" alt="Imagem padrão">
+    <input type="file" id="inputImage" accept="image/*">
+    
+    <!-- Modal Bootstrap para Cropper -->
+    <div class="modal fade" id="cropperModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalLabel">Corte a imagem</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="img-container">
+              <img id="image" src="">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-primary" id="cropAndUpload">Cortar e Upload</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Scripts necessários -->
+  <script src="{% static 'plugins/cropper/jquery.min.js' %}" crossorigin="anonymous"></script>
+  <script src="{% static 'plugins/cropper/bootstrap.bundle.min.js' %}" crossorigin="anonymous"></script>
+  <script src="{% static 'plugins/cropper/cropper.js' %}"></script>
+  <script>
+    var inputImage = document.getElementById('inputImage');
+    var uploadedImage = document.getElementById('uploadedImage');
+    var cropperModal = $('#cropperModal');
+    var image = document.getElementById('image');
+    var cropper;
+
+    inputImage.addEventListener('change', function (event) {
+      var files = event.target.files;
+      var file;
+
+      if (files && files.length) {
+        file = files[0];
+
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          image.src = e.target.result;
+          cropperModal.modal('show');
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    cropperModal.on('shown.bs.modal', function () {
+      cropper = new Cropper(image, {
+        aspectRatio: 3 / 4,
+        viewMode: 1
+      });
+    }).on('hidden.bs.modal', function () {
+      cropper.destroy();
+      cropper = null;
+    });
+
+    document.getElementById('cropAndUpload').addEventListener('click', function () {
+      var canvas;
+
+      if (cropper) {
+        canvas = cropper.getCroppedCanvas();
+        canvas.toBlob(function (blob) {
+          uploadedImage.src = URL.createObjectURL(blob); // Atualiza a imagem exibida
+          cropperModal.modal('hide');
+          // Implemente o upload para o servidor aqui
+          // Exemplo: usando fetch() ou jQuery.ajax()
+        });
+      }
+    });
+  </script>
+</body>
+</html>

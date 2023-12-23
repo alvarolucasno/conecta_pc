@@ -28,3 +28,7 @@ def login_view(request):
             return HttpResponse("Login inválido. Tente novamente.")
 
     return render(request, 'login/login.html')
+
+def teste(request):
+
+    return render(request, 'home/teste.html')
