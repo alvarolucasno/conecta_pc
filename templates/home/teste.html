@@ -19,13 +19,25 @@
       display: block;
       margin: 0 auto 20px auto; /* Centraliza a imagem */
     }
+    .drop-area {
+      border: 2px dashed #ccc;
+      border-radius: 20px;
+      width: 300px;
+      margin: 10px auto;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Upload e corte de imagem</h1>
     <img id="uploadedImage" src="https://static.vecteezy.com/ti/vetor-gratis/p1/2331588-icone-identidade-oculta-pessoa-desconhecida-vetor.jpg" alt="Imagem padrão">
-    <input type="file" id="inputImage" accept="image/*">
+    <div class="drop-area" id="dropArea">
+      Arraste e solte a imagem aqui ou clique para selecionar
+    </div>
+    <input type="file" id="inputImage" accept="image/*" style="display: none;">
     
     <!-- Modal Bootstrap para Cropper -->
     <div class="modal fade" id="cropperModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
@@ -61,21 +73,42 @@
     var cropperModal = $('#cropperModal');
     var image = document.getElementById('image');
     var cropper;
+    var dropArea = document.getElementById('dropArea');
+
+    dropArea.onclick = function() {
+      inputImage.click();
+    };
+
+    dropArea.addEventListener('dragover', function(e) {
+      e.preventDefault();
+    });
+
+    dropArea.addEventListener('drop', function(e) {
+      e.preventDefault();
+      var files = e.dataTransfer.files;
+      processFiles(files);
+    });
+
+    function processFiles(files) {
+      if (files && files.length) {
+        var file = files[0];
+        if (/^image\/\w+/.test(file.type)) {
+          var reader = new FileReader();
+          reader.onload = function (e) {
+            image.src = e.target.result;
+            cropperModal.modal('show');
+          };
+          reader.readAsDataURL(file);
+          inputImage.files = files;
+        } else {
+          window.alert('Por favor, selecione um arquivo de imagem.');
+        }
+      }
+    }
 
     inputImage.addEventListener('change', function (event) {
       var files = event.target.files;
-      var file;
-
-      if (files && files.length) {
-        file = files[0];
-
-        var reader = new FileReader();
-        reader.onload = function (e) {
-          image.src = e.target.result;
-          cropperModal.modal('show');
-        };
-        reader.readAsDataURL(file);
-      }
+      processFiles(files);
     });
 
     cropperModal.on('shown.bs.modal', function () {
@@ -89,15 +122,11 @@
     });
 
     document.getElementById('cropAndUpload').addEventListener('click', function () {
-      var canvas;
-
       if (cropper) {
-        canvas = cropper.getCroppedCanvas();
-        canvas.toBlob(function (blob) {
-          uploadedImage.src = URL.createObjectURL(blob); // Atualiza a imagem exibida
+        cropper.getCroppedCanvas().toBlob(function (blob) {
+          uploadedImage.src = URL.createObjectURL(blob);
           cropperModal.modal('hide');
-          // Implemente o upload para o servidor aqui
-          // Exemplo: usando fetch() ou jQuery.ajax()
+          // Implementação de upload seria aqui
         });
       }
     });
