@@ -1,0 +1,31 @@
+{% extends 'partials/_base.html' %}
+
+{% block title %}Conecta PC{% endblock %}
+
+{% block extra_head %}
+  <!-- Aqui você pode adicionar outros elementos ao cabeçalho, se necessário -->
+{% endblock %}
+
+{% block content %}
+  <!-- Conteúdo principal da página -->
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Bem-vindo, {{ user_name }}!</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="#">Página Inicial</a></li>
+            <li class="breadcrumb-item active">Saudação</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+{% endblock %}
+
+{% block extra_scripts %}
+  <!-- Scripts adicionais podem ser adicionados aqui, se necessário -->
+{% endblock %}

@@ -1,0 +1,250 @@
+{% extends 'partials/_base.html' %}
+
+{% load static %}
+
+{% block title %}Conecta PC | Mandados de Prisão{% endblock %}
+
+{% block extra_head %}
+
+{% endblock %}
+
+{% block content %}
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="#">Serviços</a></li>
+          <li class="breadcrumb-item active">Mandados de Prisão</li>
+          <li class="breadcrumb-item active">Alvo: {{ nome_alvo }}</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+              <div class="card card-primary">
+                <div class="card-header">
+                  <h3 class="card-title">Dados de {{ nome_alvo }} ({{ id_alvo }})</h3>
+                </div>
+                <div class="card-body">
+                  <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-row">
+                      <div class="form-group col-md-4">
+                        <label for="fotografia">Fotografia:</label>
+                        <input type="file" class="form-control" id="fotografia" name="fotografia">
+                      </div>
+                      <div class="form-group col-md-3">
+                        <label for="origemFoto">Origem da Foto:</label>
+                        <select class="form-control" id="origemFoto" name="origemFoto">
+                          <option>Foto não localizada</option>
+                          <option>SAP</option>
+                          <option>PPE PROCEDIMENTO</option>
+                          <option>CNH (PPE)</option>
+                          <option>Intranet (SSP/SE)</option>
+                          <option>SSB/BA</option>
+                          <option>SSB/AL</option>
+                          <option>Outra</option>
+                        </select>
+                      </div>
+                      <div class="form-group col-md-5">
+                        <label for="nomeCompleto">Nome Completo:</label>
+                        <input type="text" class="form-control" id="nomeCompleto" name="nomeCompleto" required>
+                      </div>
+                    </div>
+
+                    <div class="form-row">
+                      <div class="form-group col-md-2">
+                        <label for="dataNascimento">Data de Nascimento:</label>
+                        <input type="date" class="form-control" id="dataNascimento" name="dataNascimento" min="1900-01-01">
+                      </div>
+                      <div class="form-group col-md-4">
+                        <label for="mae">Mãe:</label>
+                        <input type="text" class="form-control" id="mae" name="mae">
+                      </div>
+                      <div class="form-group col-md-4">
+                        <label for="pai">Pai:</label>
+                        <input type="text" class="form-control" id="pai" name="pai">
+                      </div>
+                      <div class="form-group col-md-2">
+                        <label for="cpf">CPF:</label>
+                        <input type="text" class="form-control" id="cpf" name="cpf" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}" title="Por favor, insira o CPF completo...">
+                      </div>
+                    </div>
+
+                    <div class="form-row">
+                      <div class="form-group col-md-2">
+                        <label for="rg">RG:</label>
+                        <input type="text" class="form-control" id="rg" name="rg" pattern="\d*" inputmode="numeric" title="Por favor, insira apenas números.">
+                      </div>
+
+                      <div class="form-group col-md-2">
+                        <label for="uf_rg">UF do RG:</label>
+                        <select class="form-control" id="uf_rg" name="uf_rg">
+                          <option value="AC">Acre</option>
+                          <option value="AL">Alagoas</option>
+                          <option value="AP">Amapá</option>
+                          <option value="AM">Amazonas</option>
+                          <option value="BA">Bahia</option>
+                          <option value="CE">Ceará</option>
+                          <option value="DF">Distrito Federal</option>
+                          <option value="ES">Espírito Santo</option>
+                          <option value="GO">Goiás</option>
+                          <option value="MA">Maranhão</option>
+                          <option value="MT">Mato Grosso</option>
+                          <option value="MS">Mato Grosso do Sul</option>
+                          <option value="MG">Minas Gerais</option>
+                          <option value="PA">Pará</option>
+                          <option value="PB">Paraíba</option>
+                          <option value="PR">Paraná</option>
+                          <option value="PE">Pernambuco</option>
+                          <option value="PI">Piauí</option>
+                          <option value="RJ">Rio de Janeiro</option>
+                          <option value="RN">Rio Grande do Norte</option>
+                          <option value="RS">Rio Grande do Sul</option>
+                          <option value="RO">Rondônia</option>
+                          <option value="RR">Roraima</option>
+                          <option value="SC">Santa Catarina</option>
+                          <option value="SP">São Paulo</option>
+                          <option value="SE">Sergipe</option>
+                          <option value="TO">Tocantins</option>
+                        </select>
+                      </div>
+
+                      <div class="form-group col-md-2">
+                        <label for="cnh">CNH:</label>
+                        <input type="text" class="form-control" id="cnh" name="cnh" pattern="\d*" inputmode="numeric" title="Por favor, insira apenas números.">
+                      </div>
+                      <div class="form-group col-md-2">
+                        <label for="nis">NIS:</label>
+                        <input type="text" class="form-control" id="nis" name="nis" pattern="\d*" inputmode="numeric" title="Por favor, insira apenas números.">
+                      </div>
+                      <div class="form-group col-md-2">
+                        <label for="sap">SAP:</label>
+                        <input type="text" class="form-control" id="sap" name="sap" pattern="\d*" inputmode="numeric" title="Por favor, insira apenas números.">
+                      </div>
+
+                      <div class="form-group col-md-2">
+                        <label for="cadastrador">Informação de Morte:</label>
+                        <select class="form-control" id="morto" name="morto">
+                          <option value="0">Não</option>
+                          <option value="1">Sim</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="form-row">
+                      <div class="form-group col-md-9">
+                        <label for="observacao">Observação:</label>
+                        <input type="text" class="form-control" id="observacao" name="observacao">
+                      </div>
+                      <div class="form-group col-md-3 d-flex align-items-end justify-content-between">
+                        <button type="submit" class="btn btn-primary" style="width: 48%;">Enviar</button>
+                        <a href="/mandados" class="btn btn-danger" style="width: 48%;">Cancelar</a>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </form>
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+    </div>
+    <!-- /.col -->
+  </div>
+  <!-- /.row -->
+
+<!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    
+  document.addEventListener("DOMContentLoaded", function() {
+      const cpfInput = document.getElementById("cpf");
+
+      cpfInput.addEventListener("input", function(e) {
+          let value = e.target.value;
+          value = value.replace(/\D/g, ""); // Remove todos os caracteres não numéricos
+          value = value.replace(/(\d{3})(\d)/, "$1.$2"); // Insere um ponto depois do terceiro dígito
+          value = value.replace(/(\d{3})\.(\d{3})(\d)/, "$1.$2.$3"); // Insere um ponto depois do sexto dígito
+          value = value.replace(/(\d{3})\.(\d{3})\.(\d{3})(\d)/, "$1.$2.$3-$4"); // Insere um hífen depois do nono dígito
+          e.target.value = value.substring(0, 14); // Corta o valor para se ajustar ao tamanho máximo de um CPF
+      });
+  });
+
+  document.addEventListener("DOMContentLoaded", function() {
+      const inputs = ['rg', 'cnh', 'nis', 'sap'];
+
+      inputs.forEach(function(inputId) {
+          const inputElem = document.getElementById(inputId);
+
+          inputElem.addEventListener("input", function(e) {
+              e.target.value = e.target.value.replace(/\D/g, ""); // Remove todos os caracteres não numéricos
+          });
+      });
+  });
+
+  document.addEventListener("DOMContentLoaded", function() {
+      function formatarNome(e) {
+          let value = e.target.value;
+  
+          // Remove todos os caracteres não-alfabéticos, exceto espaço
+          value = value.replace(/[^a-zA-Z\sáéíóúÁÉÍÓÚçÇãõÃÕ]/g, "");
+  
+          // Divide o nome em palavras
+          let palavras = value.split(" ");
+          
+          // Array para armazenar as palavras formatadas
+          let palavrasFormatadas = [];
+          
+          // Palavras que devem aparecer em minúsculo
+          const palavrasMinusculas = ["de", "do", "da", "dos", "das"];
+          
+          for(let palavra of palavras) {
+              // Verifica se a palavra deve ser toda em minúsculo
+              if (palavrasMinusculas.includes(palavra.toLowerCase())) {
+                  palavrasFormatadas.push(palavra.toLowerCase());
+              } else {
+                  // Formata a palavra para ter a primeira letra maiúscula e o resto minúsculo
+                  let palavraFormatada = palavra.charAt(0).toUpperCase() + palavra.slice(1).toLowerCase();
+                  palavrasFormatadas.push(palavraFormatada);
+              }
+          }
+          
+          // Junta as palavras formatadas em uma string
+          let nomeFormatado = palavrasFormatadas.join(" ");
+          
+          // Atualiza o valor do input
+          e.target.value = nomeFormatado;
+      }
+      
+      // Aplica a função de formatação para cada elemento de entrada relevante
+      const nomeCompletoInput = document.getElementById("nomeCompleto");
+      nomeCompletoInput.addEventListener("input", formatarNome);
+      
+      const maeInput = document.getElementById("mae");
+      maeInput.addEventListener("input", formatarNome);
+  
+      const paiInput = document.getElementById("pai");
+      paiInput.addEventListener("input", formatarNome);
+  });    
+
+</script>
+{% endblock %}
