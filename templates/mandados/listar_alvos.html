@@ -1,6 +1,7 @@
 {% extends 'partials/_base.html' %}
 
 {% load static %}
+{% load meus_filtros %}
 
 {% block title %}Conecta PC | Mandados de Prisão{% endblock %}
 
@@ -70,7 +71,11 @@
                   <td style="text-align: center; vertical-align: middle;">{% if row.nome is not None %}{{ row.nome }}{% else %}{% endif %}</td>
                   <td style="text-align: center; vertical-align: middle;">{% if row.nomeMae is not None %}{{ row.nomeMae }}{% else %}{% endif %}</td>
                   <td style="text-align: center; vertical-align: middle;">{% if row.nomePai is not None %}{{ row.nomePai }}{% else %}{% endif %}</td>
-                  <td style="text-align: center; vertical-align: middle;">{% if row.rg is not None %}{{ row.rg }}{% else %}{% endif %}</td>
+                  <td style="text-align: center; vertical-align: middle;">
+                    {% if row.rg is not None %}
+                        {{ row.rg|apenas_numeros }}
+                    {% endif %}
+                  </td>        
                   <td style="text-align: center; vertical-align: middle;">{% if row.cpf is not None %}{{ row.cpf }}{% else %}{% endif %}</td>
                   <td style="text-align: center; vertical-align: middle;">{% if row.sexo is not None %}{{ row.sexo }}{% else %}{% endif %}</td>
                   <td style="text-align: center; vertical-align: middle;">{% if row.dataNascimento is not None %}{{ row.dataNascimento }}{% else %}{% endif %}</td>
