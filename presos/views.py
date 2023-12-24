@@ -13,6 +13,8 @@ from .models import Preso
 from django.utils.text import slugify
 import base64
 from django.core.files.base import ContentFile
+import json
+
 
 
 @login_required(login_url='/login/')
@@ -60,12 +62,12 @@ def cadastrar(request):
                 ext = format.split('/')[-1] 
                 image = ContentFile(base64.b64decode(imgstr), name=f'temp.{ext}')
 
-                file_path = f'media/teste/{nome_completo}_{i}.{ext}'
+                file_path = f'C:/Users/ALVAR/Documents/Projetos Python/conecta_pc/data/web/media/fotos_usuarios/teste/{nome_completo}_{i}.{ext}'
                 with open(file_path, 'wb+') as destination:
                     for chunk in image.chunks():
                         destination.write(chunk)
 
-        return HttpResponse(dicionario)
+        return HttpResponse(json.dumps(dicionario), content_type='application/json')
     
     nome = request.user.first_name
     sobrenome = request.user.last_name
