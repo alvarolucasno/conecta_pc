@@ -33,6 +33,13 @@ class Preso(models.Model):
     cnh = models.CharField(max_length=20, blank=True, null=True)
     nis = models.CharField(max_length=20, blank=True, null=True)
     sap = models.CharField(max_length=10, blank=True, null=True)
+    
+    SEXO_CHOICES = (
+    ('M', 'Masculino'),
+    ('F', 'Feminino'),
+)
+    
+    sexo = models.CharField(max_length=1, choices=SEXO_CHOICES)
 
     # Detalhes da prisão
     razao_prisao = models.CharField(max_length=255)

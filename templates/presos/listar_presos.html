@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% block title %}Conecta PC | Mandados de Prisão{% endblock %}
+{% block title %}Conecta PC | Presos{% endblock %}
 
 {% block extra_head %}
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -22,7 +22,8 @@
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
           <li class="breadcrumb-item"><a href="#">Serviços</a></li>
-          <li class="breadcrumb-item active">Mandados de Prisão</li>
+          <li class="breadcrumb-item active">Presos</li>
+          <li class="breadcrumb-item active">Listar</li>
         </ol>
       </div>
     </div>
@@ -36,13 +37,12 @@
           <div class="card-body">
             <div class="card card-primary">
               <div class="card-header">
-                <h3 class="card-title">Mandados de prisão criminais pendentes:</h3>
+                <h3 class="card-title">Presos cadastrados:</h3>
               </div>
           <div class="card-body">
-            <table id="mandados" class="table table-bordered table-striped">
+            <table id="presos" class="table table-bordered table-striped">
               <thead>
                 <tr>
-                  <th style="width: 3%;">*</th>
                   <th style="width: 6%;">Foto</th>
                   <th style="width: 15%;">Nome</th>
                   <th style="width: 15%;">Mãe</th>
@@ -55,35 +55,35 @@
                 </tr>
               </thead>
               <tbody>
-                {% for row in dados %}
-                <tr>
-                  <td style="text-align:center; vertical-align:middle;" data-order="{{ row.dado_detalhado }}">
-                    {% if row.dado_detalhado == 0 %}
-                    <img src="{% static 'dist/img/0.png' %}" width="20" height="20">
-                    {% elif row.dado_detalhado == 1 %}
-                    <img src="{% static 'dist/img/1.png' %}" width="20" height="20">
-                    {% endif %}
-                  </td>
-                  <td style="display: flex; justify-content: center; align-items: center; text-align:center; vertical-align:middle;" data-order="{% if row.caminho_foto %}1{% else %}0{% endif %}">
-                    <img src="{% if row.caminho_foto %}http://38.242.248.229/static/{{ row.caminho_foto }}{% else %}https://t4.ftcdn.net/jpg/01/18/03/35/240_F_118033506_uMrhnrjBWBxVE9sYGTgBht8S5liVnIeY.jpg{% endif %}" alt="Foto do alvo" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
-                  </td>
-                  <td style="text-align: center; vertical-align: middle;">{% if row.nome is not None %}{{ row.nome }}{% else %}{% endif %}</td>
-                  <td style="text-align: center; vertical-align: middle;">{% if row.nomeMae is not None %}{{ row.nomeMae }}{% else %}{% endif %}</td>
-                  <td style="text-align: center; vertical-align: middle;">{% if row.nomePai is not None %}{{ row.nomePai }}{% else %}{% endif %}</td>
-                  <td style="text-align: center; vertical-align: middle;">{% if row.rg is not None %}{{ row.rg }}{% else %}{% endif %}</td>
-                  <td style="text-align: center; vertical-align: middle;">{% if row.cpf is not None %}{{ row.cpf }}{% else %}{% endif %}</td>
-                  <td style="text-align: center; vertical-align: middle;">{% if row.sexo is not None %}{{ row.sexo }}{% else %}{% endif %}</td>
-                  <td style="text-align: center; vertical-align: middle;">{% if row.dataNascimento is not None %}{{ row.dataNascimento }}{% else %}{% endif %}</td>
-                  <td style="text-align: center; vertical-align: middle;">
-                    <a href="{% url 'editar_alvo' row.id_pessoa %}">
-                      <img src="{% static 'dist/img/editar_dado.png' %}" width="40" height="40" alt="Editar">
-                    </a>
-                  </td>
-                </tr>
+                {% for preso in presos %}
+                  <tr>
+                    <td><img src="{{ preso.frontal.url }}" alt="Foto" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;"></td>
+                    <td style="text-align: center; vertical-align: middle;">{{ preso.nome_completo }}</td>
+                    <td style="text-align: center; vertical-align: middle;">{{ preso.mae }}</td>
+                    <td style="text-align: center; vertical-align: middle;">{{ preso.pai }}</td>
+                    <td style="text-align: center; vertical-align: middle;">{{ preso.rg }}</td>
+                    <td style="text-align: center; vertical-align: middle;">{{ preso.cpf|slice:":3" }}.{{ preso.cpf|slice:"3:6" }}.{{ preso.cpf|slice:"6:9" }}-{{ preso.cpf|slice:"9:11" }}</td>
+                    <td style="text-align: center; vertical-align: middle;">{{ preso.get_sexo_display }}</td>
+                    <td style="text-align: center; vertical-align: middle;">{{ preso.data_nascimento|date:"d/m/Y" }}</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                      <a href="#">
+                        <img src="{% static 'dist/img/editar_dado.png' %}" width="40" height="40" alt="Editar">
+                      </a>
+                    </td>
+                  </tr>
+                {% empty %}
+                  <tr>
+                    <td colspan="9">Nenhum preso cadastrado.</td>
+                  </tr>
                 {% endfor %}
-              </tbody>
+              </tbody>              
             </table>
+            <div class="d-flex justify-content-end">
+              <a href="/presos/cadastrar" class="btn btn-primary mt-3" style="width: 16%;">Adicionar Investigado</a>
           </div>
+          
+          </div>
+        </div>
           <!-- /.card-body -->
         </div>
         <!-- /.card -->
@@ -92,6 +92,7 @@
     </div>
     <!-- /.row -->
   </div>
+
   <!-- /.container-fluid -->
 </section>
 
@@ -119,7 +120,7 @@
 
 <script>
   $(function () {
-    $("#mandados").DataTable({
+    $("#presos").DataTable({
       "responsive": true,
       "lengthChange": true,
       "autoWidth": false,
@@ -135,7 +136,7 @@
       "searching": true,
       "ordering": true,
       "info": true,
-      "order": [[9, 'asc']],
+      "order": [[1, 'asc']],
       "lengthMenu": [[5, 10, 25, 50, 100], [5, 10, 25, 50, 100]], // Define as opções de quantidade de registros por página
       "language": {
         "sEmptyTable": "Nenhum registro encontrado",
@@ -160,7 +161,7 @@
           "sSortDescending": ": Ordenar colunas de forma descendente"
         }
       }
-    }).buttons().container().appendTo('#mandados_wrapper .col-md-6:eq(0)');
+    }).buttons().container().appendTo('#presos_wrapper .col-md-6:eq(0)');
   });
 </script>
 {% endblock %}
