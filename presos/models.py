@@ -2,20 +2,14 @@ from django.conf import settings
 from django.db import models
 from django.utils.text import slugify
 
-def format_date_for_path(date):
-    return date.strftime('%Y%m%d')
-
 def upload_to_perfil_esquerdo(instance, filename):
-    data_formatada = format_date_for_path(instance.data_fotos)
-    return f'presos/{slugify(instance.nome_completo)}_{slugify(instance.mae)}/{slugify(instance.nome_completo)}_{data_formatada}_perfil_esquerdo.jpg'
+    return f'presos/{slugify(instance.nome_completo)}_{slugify(instance.mae)}/{slugify(instance.nome_completo)}_{instance.data_fotos}_perfil_esquerdo.jpg'
 
 def upload_to_frontal(instance, filename):
-    data_formatada = format_date_for_path(instance.data_fotos)
-    return f'presos/{slugify(instance.nome_completo)}_{slugify(instance.mae)}/{slugify(instance.nome_completo)}_{data_formatada}_face.jpg'
+    return f'presos/{slugify(instance.nome_completo)}_{slugify(instance.mae)}/{slugify(instance.nome_completo)}_{instance.data_fotos}_face.jpg'
 
 def upload_to_perfil_direito(instance, filename):
-    data_formatada = format_date_for_path(instance.data_fotos)
-    return f'presos/{slugify(instance.nome_completo)}_{slugify(instance.mae)}/{slugify(instance.nome_completo)}_{data_formatada}_perfil_direito.jpg'
+    return f'presos/{slugify(instance.nome_completo)}_{slugify(instance.mae)}/{slugify(instance.nome_completo)}_{instance.data_fotos}_perfil_direito.jpg'
 
 
 class Preso(models.Model):
