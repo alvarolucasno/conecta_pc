@@ -209,10 +209,6 @@
           document.getElementById('image').src = e.target.result;
           $('#cropperModal').modal('show');
           document.getElementById('cropAndUpload').setAttribute('data-drop-area', dropAreaNum);
-
-          // Armazene o dado base64 na entrada oculta correspondente
-          var croppedImageInput = document.getElementById('croppedImage' + dropAreaNum);
-          croppedImageInput.value = e.target.result;
         };
         reader.readAsDataURL(file);
         document.getElementById('inputImage' + dropAreaNum).files = files;
@@ -268,9 +264,19 @@
     var dropAreaNum = this.getAttribute('data-drop-area');
     if (cropper) {
       cropper.getCroppedCanvas().toBlob(function (blob) {
-        document.getElementById('uploadedImage' + dropAreaNum).src = URL.createObjectURL(blob);
-        $('#cropperModal').modal('hide');
-        // Implementação de upload seria aqui
+        // Aqui, após o recorte, você pode criar um novo FileReader
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          document.getElementById('uploadedImage' + dropAreaNum).src = e.target.result;
+          $('#cropperModal').modal('hide');
+          // Agora você tem o base64 da imagem após o recorte
+          var croppedBase64 = e.target.result;
+          
+          // Faça o que deseja com o base64 recortado, por exemplo, atribua ao input oculto
+          var croppedImageInput = document.getElementById('croppedImage' + dropAreaNum);
+          croppedImageInput.value = croppedBase64;
+        };
+        reader.readAsDataURL(blob);
       });
     }
   });
@@ -333,6 +339,7 @@
     const paiInput = document.getElementById("pai");
     paiInput.addEventListener("input", formatarNome);
   });
+  
 </script>
 {% endblock %}
 
