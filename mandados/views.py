@@ -8,6 +8,7 @@ from io import BytesIO
 from datetime import datetime
 from django.contrib import messages
 import time
+from tabelas_apoio.models import Cidade
 
 @login_required(login_url='/login/')
 def listar_alvos(request):
@@ -36,6 +37,9 @@ def editar_alvo(request, id_pessoa):
     foto = request.user.foto
 
     usuario = f"{nome.capitalize()} {sobrenome.capitalize()}"
+    
+    ufs_unicos = Cidade.objects.values_list('uf', flat=True).distinct()
+    ufs_unicos = sorted(ufs_unicos)
     
     id_alvo, nome_alvo = db_mandados.get_name_by_id(id_pessoa)
     
@@ -79,4 +83,4 @@ def editar_alvo(request, id_pessoa):
         except Exception as e:
             messages.error(request, f'Erro ao salvar os dados: {e}')
     
-    return render(request, 'mandados/editar_pessoa.html', {'user_name': usuario, 'foto': foto, 'id_alvo': id_alvo, 'nome_alvo': nome_alvo.upper()})
+    return render(request, 'mandados/editar_pessoa.html', {'user_name': usuario, 'foto': foto, 'id_alvo': id_alvo, 'nome_alvo': nome_alvo.upper(), 'ufs': ufs_unicos})
