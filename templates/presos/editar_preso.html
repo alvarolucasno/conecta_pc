@@ -1,0 +1,346 @@
+{% extends 'partials/_base.html' %}
+
+{% load static %}
+
+{% block title %}Conecta PC | Presos{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'plugins/cropper/cropper.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="#">Serviços</a></li>
+          <li class="breadcrumb-item active">Presos</li>
+          <li class="breadcrumb-item active">Cadastrar</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Dados do preso</h3>
+              </div>
+              <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <div class="form-row">
+                    <div class="form-group col-md-4 text-center">
+                      <div class="drop-area" id="dropArea1" style="border: 2px dashed #ccc; border-radius: 10px; padding: 10px;">
+                        <img id="uploadedImage1" src="{% static 'dist\img\direita.png' %}" alt="Imagem padrão" style="max-width: 300px; max-height: 400px;" draggable="true">
+                        <div class="d-flex justify-content-center align-items-center" style="height: 50px;">Perfil esquerdo</div>
+                        <input type="file" id="inputImage1" accept="image/*" style="display: none;">
+                      </div>
+                    </div>
+                    <div class="form-group col-md-4 text-center">
+                      <div class="drop-area" id="dropArea2" style="border: 2px dashed #ccc; border-radius: 10px; padding: 10px;">
+                        <img id="uploadedImage2" src="{% static 'dist\img\frontal.png' %}" alt="Imagem padrão" style="max-width: 300px; max-height: 400px;" draggable="true">
+                        <div class="d-flex justify-content-center align-items-center" style="height: 50px;">Frontal</div>
+                        <input type="file" id="inputImage2" accept="image2/*" style="display: none;">
+                      </div>
+                    </div>
+                    <div class="form-group col-md-4 text-center">
+                      <div class="drop-area" id="dropArea3" style="border: 2px dashed #ccc; border-radius: 10px; padding: 10px;">
+                        <img id="uploadedImage3" src="{% static 'dist\img\esquerda.png' %}" alt="Imagem padrão" style="max-width: 300px; max-height: 400px;" draggable="true">
+                        <div class="d-flex justify-content-center align-items-center" style="height: 50px;">Perfil direito</div>
+                        <input type="file" id="inputImage3" accept="image/*" style="display: none;">
+                      </div>
+                      <input type="hidden" name="croppedImage1" id="croppedImage1">
+                      <input type="hidden" name="croppedImage2" id="croppedImage2">
+                      <input type="hidden" name="croppedImage3" id="croppedImage3">
+                    </div>                                        
+                  </div> 
+                    <div class="form-row">
+                      <div class="form-group col-md-2">
+                        <label for="dataNascimento">Data das fotos:</label>
+                        <input type="date" class="form-control" id="data_fotos" name="data_fotos" value="{{ preso.data_fotos|date:'Y-m-d' }}" min="2023-01-01">
+                      </div>
+                      <div class="form-group col-md-2">
+                        <label for="origem_fotos">Origem da Foto:</label>
+                        <select class="form-control" id="origem_fotos" name="origem_fotos" required>
+                          <option value="1ª DM" {% if preso.origem_fotos == "1ª DM" %}selected{% endif %}>1ª DM</option>
+                          <option value="2ª DM" {% if preso.origem_fotos == "2ª DM" %}selected{% endif %}>2ª DM</option>
+                          <option value="3ª DM" {% if preso.origem_fotos == "3ª DM" %}selected{% endif %}>3ª DM</option>
+                          <option value="4ª DM" {% if preso.origem_fotos == "4ª DM" %}selected{% endif %}>4ª DM</option>
+                          <option value="5ª DM" {% if preso.origem_fotos == "5ª DM" %}selected{% endif %}>5ª DM</option>
+                          <option value="8ª DM" {% if preso.origem_fotos == "8ª DM" %}selected{% endif %}>8ª DM</option>
+                          <option value="COPE" {% if preso.origem_fotos == "COPE" %}selected{% endif %}>COPE</option>
+                        </select>                        
+                      </div>
+                      <div class="form-group col-md-6">
+                        <label for="nome_completo">Nome Completo:</label>
+                        <input type="text" class="form-control" id="nome_completo" name="nome_completo" value="{{ preso.nome_completo }}" required>
+                      </div>
+                      <div class="form-group col-md-2">
+                        <label for="data_nascimento">Data de Nascimento:</label>
+                        <input type="date" class="form-control" id="data_nascimento" name="data_nascimento" value="{{ preso.data_nascimento|date:'Y-m-d' }}" min="1900-01-01">
+                      </div>
+                    </div>
+
+                    <div class="form-row">
+                      <div class="form-group col-md-4">
+                        <label for="mae">Mãe:</label>
+                        <input type="text" class="form-control" id="mae" name="mae" value="{{ preso.mae }}" required>
+                      </div>
+                      <div class="form-group col-md-4">
+                        <label for="pai">Pai:</label>
+                        <input type="text" class="form-control" id="pai" name="pai" value="{{ preso.pai }}">
+                      </div>
+                      <div class="form-group col-md-2">
+                        <label for="rg">RG:</label>
+                        <input type="text" class="form-control" id="rg" name="rg" pattern="\d*" inputmode="numeric" title="Por favor, insira apenas números." value="{{ preso.rg }}">
+                      </div>
+
+                      <div class="form-group col-md-2">
+                        <label for="uf_rg">UF do RG:</label>
+                        <select class="form-control" id="uf_rg" name="uf_rg">
+                          {% for uf in ufs %}
+                              <option value="{{ uf }}" {% if preso.uf_rg == uf %}selected{% endif %}>{{ uf }}</option>
+                          {% endfor %}
+                      </select>                      
+                    </div>
+                  </div>
+
+                    <div class="form-row">
+                      <div class="form-group col-md-2">
+                        <label for="cpf">CPF:</label>
+                        <input type="text" class="form-control" id="cpf" name="cpf" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}" title="Por favor, insira o CPF completo..." value="{{ preso.cpf|slice:':3' }}.{{ preso.cpf|slice:'3:6' }}.{{ preso.cpf|slice:'6:9' }}-{{ preso.cpf|slice:'9:11' }}">
+                      </div>
+
+                      <div class="form-group col-md-2">
+                        <label for="cnh">CNH:</label>
+                        <input type="text" class="form-control" id="cnh" name="cnh" pattern="\d*" inputmode="numeric" title="Por favor, insira apenas números." value="{{ preso.cnh }}">
+                      </div>
+                      <div class="form-group col-md-2">
+                        <label for="nis">NIS:</label>
+                        <input type="text" class="form-control" id="nis" name="nis" pattern="\d*" inputmode="numeric" title="Por favor, insira apenas números." value="{{ preso.nis }}">
+                      </div>
+                      <div class="form-group col-md-1">
+                        <label for="sap">SAP:</label>
+                        <input type="text" class="form-control" id="sap" name="sap" pattern="\d*" inputmode="numeric" title="Por favor, insira apenas números." value="{{ preso.sap }}">
+                      </div>
+
+                      <div class="form-group col-md-2">
+                        <label for="razao_prisao">Tipo de prisão:</label>
+                        <select class="form-control" id="razao_prisao" name="razao_prisao" required>
+                          <option value="APF" {% if preso.razao_prisao == "APF" %}selected{% endif %}>APF</option>
+                          <option value="Mandado de Prisão" {% if preso.razao_prisao == "Mandado de Prisão" %}selected{% endif %}>Mandado de Prisão</option>
+                          <option value="Prisão Cível" {% if preso.razao_prisao == "Prisão Cível" %}selected{% endif %}>Prisão Cível</option>
+                        </select>                        
+                      </div>
+                      <div class="form-group col-md-3">
+                        <label for="numero_procedimento">Número do procedimento ou mandado:</label>
+                        <input type="text" class="form-control" id="numero_procedimento" name="numero_procedimento" value="{{ preso.numero_procedimento }}"required>
+                      </div>
+                    </div>
+
+                    <div class="form-row">
+                      <div class="form-group col-md-9">
+                        <label for="observacao">Observação:</label>
+                        <input type="text" class="form-control" id="observacao" name="observacao" value="{{ preso.observacao }}">
+                      </div>
+                      <div class="form-group col-md-3 d-flex align-items-end justify-content-between">
+                        <button type="submit" class="btn btn-primary" style="width: 48%;">Enviar</button>
+                        <a href="/presos" class="btn btn-danger" style="width: 48%;">Cancelar</a>
+                      </div>
+                    </div>
+                  </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<div class="modal fade" id="cropperModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog" role="document" style="max-height: 90%;">
+    <div class="modal-content" style="padding: 10px;">
+      <div class="modal-header" style="padding: 10px;">
+        <h5 class="modal-title" id="modalLabel">Formate a imagem</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body" style="max-height: 600px; overflow-y: auto; padding: 10px;">
+        <div class="img-container">
+          <img id="image" src="" style="max-height: 700px; width: auto; height: auto;">
+        </div>
+      </div>
+      <div class="modal-footer" style="padding: 10px;">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" id="cropAndUpload">Salvar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'plugins/cropper/jquery.min.js' %}" crossorigin="anonymous"></script>
+<script src="{% static 'plugins/cropper/bootstrap.bundle.min.js' %}" crossorigin="anonymous"></script>
+<script src="{% static 'plugins/cropper/cropper.js' %}"></script>
+
+<script>
+  // Uma função para processar os arquivos para todas as áreas de drop
+  function processFiles(files, dropAreaNum) {
+    if (files && files.length) {
+      var file = files[0];
+      if (/^image\/\w+/.test(file.type)) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          document.getElementById('image').src = e.target.result;
+          $('#cropperModal').modal('show');
+          document.getElementById('cropAndUpload').setAttribute('data-drop-area', dropAreaNum);
+        };
+        reader.readAsDataURL(file);
+        document.getElementById('inputImage' + dropAreaNum).files = files;
+      } else {
+        window.alert('Por favor, selecione um arquivo de imagem.');
+      }
+    }
+  }
+
+  // Configuração de eventos para cada área de drop
+  for (let i = 1; i <= 3; i++) {
+    let dropArea = document.getElementById('dropArea' + i);
+    let inputImage = document.getElementById('inputImage' + i);
+    
+    dropArea.onclick = function() {
+      inputImage.click();
+    };
+
+    dropArea.addEventListener('dragover', function(e) {
+      e.preventDefault();
+    });
+
+    dropArea.addEventListener('drop', function(e) {
+      e.preventDefault();
+      var files = e.dataTransfer.files;
+      processFiles(files, i);
+    });
+
+    inputImage.addEventListener('change', function (event) {
+      var files = event.target.files;
+      processFiles(files, i);
+    });
+  }
+
+  // Modal Cropper.js
+  var cropper;
+  $('#cropperModal').on('shown.bs.modal', function () {
+    cropper = new Cropper(document.getElementById('image'), {
+      aspectRatio: 3 / 4,
+      viewMode: 1
+    });
+  }).on('hidden.bs.modal', function () {
+    cropper.destroy();
+    cropper = null;
+    // Adiciona a lógica de resetar o valor do input
+    for (let i = 1; i <= 3; i++) {
+      document.getElementById('inputImage' + i).value = '';
+    }
+  });
+
+  // Manipulação do evento de corte e upload
+  document.getElementById('cropAndUpload').addEventListener('click', function () {
+    var dropAreaNum = this.getAttribute('data-drop-area');
+    if (cropper) {
+      cropper.getCroppedCanvas().toBlob(function (blob) {
+        // Aqui, após o recorte, você pode criar um novo FileReader
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          document.getElementById('uploadedImage' + dropAreaNum).src = e.target.result;
+          $('#cropperModal').modal('hide');
+          // Agora você tem o base64 da imagem após o recorte
+          var croppedBase64 = e.target.result;
+          
+          // Faça o que deseja com o base64 recortado, por exemplo, atribua ao input oculto
+          var croppedImageInput = document.getElementById('croppedImage' + dropAreaNum);
+          croppedImageInput.value = croppedBase64;
+        };
+        reader.readAsDataURL(blob);
+      });
+    }
+  });
+</script>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const cpfInput = document.getElementById("cpf");
+
+    cpfInput.addEventListener("input", function(e) {
+      let value = e.target.value;
+      value = value.replace(/\D/g, "");
+      value = value.replace(/(\d{3})(\d)/, "$1.$2");
+      value = value.replace(/(\d{3})\.(\d{3})(\d)/, "$1.$2.$3");
+      value = value.replace(/(\d{3})\.(\d{3})\.(\d{3})(\d)/, "$1.$2.$3-$4");
+      e.target.value = value.substring(0, 14);
+    });
+  });
+
+  document.addEventListener("DOMContentLoaded", function() {
+    const inputs = ['rg', 'cnh', 'nis', 'sap'];
+
+    inputs.forEach(function(inputId) {
+      const inputElem = document.getElementById(inputId);
+
+      inputElem.addEventListener("input", function(e) {
+        e.target.value = e.target.value.replace(/\D/g, "");
+      });
+    });
+  });
+
+  document.addEventListener("DOMContentLoaded", function() {
+    function formatarNome(e) {
+      let value = e.target.value;
+      value = value.replace(/[^a-zA-Z\sáéíóúÁÉÍÓÚçÇãõÃÕ]/g, "");
+      let palavras = value.split(" ");
+      let palavrasFormatadas = [];
+      const palavrasMinusculas = ["de", "do", "da", "dos", "das"];
+
+      for (let palavra of palavras) {
+        if (palavrasMinusculas.includes(palavra.toLowerCase())) {
+          palavrasFormatadas.push(palavra.toLowerCase());
+        } else {
+          let palavraFormatada = palavra.charAt(0).toUpperCase() + palavra.slice(1).toLowerCase();
+          palavrasFormatadas.push(palavraFormatada);
+        }
+      }
+
+      let nomeFormatado = palavrasFormatadas.join(" ");
+      e.target.value = nomeFormatado;
+    }
+
+    const nomeCompletoInput = document.getElementById("nome_completo");
+    nomeCompletoInput.addEventListener("input", formatarNome);
+
+    const maeInput = document.getElementById("mae");
+    maeInput.addEventListener("input", formatarNome);
+
+    const paiInput = document.getElementById("pai");
+    paiInput.addEventListener("input", formatarNome);
+  });
+  
+</script>
+{% endblock %}
+
+

@@ -37,7 +37,9 @@
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <li class="nav-item menu-open">
-                <a href="#" class="nav-link {% if request.path == '/mandados/' %}active{% endif %}">
+              {% with url_prefix=request.path|slice:"0:9" %}
+              <a href="#" class="nav-link {% if url_prefix == '/mandados/' or url_prefix == '/presos/' %}active{% endif %}">
+              {% endwith %}
                     <i class="nav-icon fas fa-tools" style="font-size: 1.3em;"></i>
                     <p>Serviços<i class="right fas fa-angle-left"></i></p>
                 </a>
@@ -49,6 +51,19 @@
                         </a>
                     </li>                
                 </ul>
+                
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                      <a href="/presos" class="nav-link {% if request.path == '/presos/' %}active{% endif %}">
+                          <i class="nav-icon fas ion-ios-people" style="font-size: 1.3em;"></i>
+                          <p>Presos</p>
+                      </a>
+                  </li>                
+              </ul>
+
+
+
+              </ul>                       
             </li>
         </ul>
     </nav>    

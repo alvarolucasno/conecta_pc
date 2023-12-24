@@ -37,21 +37,20 @@
           <div class="card-body">
             <div class="card card-primary">
               <div class="card-header">
-                <h3 class="card-title">Presos cadastrados:</h3>
+                <h3 class="card-title">Registros de presos</h3>
               </div>
           <div class="card-body">
             <table id="presos" class="table table-bordered table-striped">
               <thead>
                 <tr>
-                  <th style="width: 6%;">Foto</th>
-                  <th style="width: 15%;">Nome</th>
-                  <th style="width: 15%;">Mãe</th>
-                  <th style="width: 15%;">Pai</th>
-                  <th style="width: 6%;">RG</th>
-                  <th style="width: 11%;">CPF</th>
-                  <th style="width: 6%;">Sexo</th>
-                  <th style="width: 6%;">DN</th>
-                  <th style="width: 5%;">Editar</th>
+                  <th style="width: 6%; text-align: center; vertical-align: middle;">Foto</th>
+                  <th style="width: 15%; text-align: center; vertical-align: middle;">Nome</th>
+                  <th style="width: 15%; text-align: center; vertical-align: middle;">Mãe</th>
+                  <th style="width: 11%; text-align: center; vertical-align: middle;">CPF</th>
+                  <th style="width: 6%; text-align: center; vertical-align: middle;">Sexo</th>
+                  <th style="width: 6%; text-align: center; vertical-align: middle;">Unidade</th>
+                  <th style="width: 6%; text-align: center; vertical-align: middle;">Data do registro</th>
+                  <th style="width: 5%; text-align: center; vertical-align: middle;">Editar</th>
                 </tr>
               </thead>
               <tbody>
@@ -60,13 +59,12 @@
                     <td><img src="{{ preso.frontal.url }}" alt="Foto" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;"></td>
                     <td style="text-align: center; vertical-align: middle;">{{ preso.nome_completo }}</td>
                     <td style="text-align: center; vertical-align: middle;">{{ preso.mae }}</td>
-                    <td style="text-align: center; vertical-align: middle;">{{ preso.pai }}</td>
-                    <td style="text-align: center; vertical-align: middle;">{{ preso.rg }}</td>
                     <td style="text-align: center; vertical-align: middle;">{{ preso.cpf|slice:":3" }}.{{ preso.cpf|slice:"3:6" }}.{{ preso.cpf|slice:"6:9" }}-{{ preso.cpf|slice:"9:11" }}</td>
                     <td style="text-align: center; vertical-align: middle;">{{ preso.get_sexo_display }}</td>
-                    <td style="text-align: center; vertical-align: middle;">{{ preso.data_nascimento|date:"d/m/Y" }}</td>
+                    <td style="text-align: center; vertical-align: middle;">{{ preso.origem_fotos }}</td>
+                    <td style="text-align: center; vertical-align: middle;">{{ preso.data_fotos|date:"d/m/Y" }}</td>
                     <td style="text-align: center; vertical-align: middle;">
-                      <a href="#">
+                      <a href="{% url 'editar_preso' preso.id %}">
                         <img src="{% static 'dist/img/editar_dado.png' %}" width="40" height="40" alt="Editar">
                       </a>
                     </td>
@@ -79,7 +77,7 @@
               </tbody>              
             </table>
             <div class="d-flex justify-content-end">
-              <a href="/presos/cadastrar" class="btn btn-primary mt-3" style="width: 16%;">Adicionar Investigado</a>
+              <a href="/presos/cadastrar_preso" class="btn btn-primary mt-3" style="width: 16%;">Adicionar Investigado</a>
           </div>
           
           </div>
