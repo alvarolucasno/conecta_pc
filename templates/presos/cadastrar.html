@@ -42,32 +42,35 @@
                       <div class="drop-area" id="dropArea1" style="border: 2px dashed #ccc; border-radius: 10px; padding: 10px;">
                         <img id="uploadedImage1" src="{% static 'dist\img\direita.png' %}" alt="Imagem padrão" style="max-width: 300px; max-height: 400px;" draggable="true">
                         <div class="d-flex justify-content-center align-items-center" style="height: 50px;">Perfil esquerdo</div>
-                        <input type="file" id="inputImage1" accept="image/*" style="display: none;">
+                        <input type="file" id="inputImage1" accept="image/*" style="display: none;" required>
                       </div>
                     </div>
                     <div class="form-group col-md-4 text-center">
                       <div class="drop-area" id="dropArea2" style="border: 2px dashed #ccc; border-radius: 10px; padding: 10px;">
                         <img id="uploadedImage2" src="{% static 'dist\img\frontal.png' %}" alt="Imagem padrão" style="max-width: 300px; max-height: 400px;" draggable="true">
                         <div class="d-flex justify-content-center align-items-center" style="height: 50px;">Frontal</div>
-                        <input type="file" id="inputImage2" accept="image2/*" style="display: none;">
+                        <input type="file" id="inputImage2" accept="image2/*" style="display: none;" required>
                       </div>
                     </div>
                     <div class="form-group col-md-4 text-center">
                       <div class="drop-area" id="dropArea3" style="border: 2px dashed #ccc; border-radius: 10px; padding: 10px;">
                         <img id="uploadedImage3" src="{% static 'dist\img\esquerda.png' %}" alt="Imagem padrão" style="max-width: 300px; max-height: 400px;" draggable="true">
                         <div class="d-flex justify-content-center align-items-center" style="height: 50px;">Perfil direito</div>
-                        <input type="file" id="inputImage3" accept="image/*" style="display: none;">
+                        <input type="file" id="inputImage3" accept="image/*" style="display: none;" required>
                       </div>
+                      <input type="hidden" name="croppedImage1" id="croppedImage1">
+                      <input type="hidden" name="croppedImage2" id="croppedImage2">
+                      <input type="hidden" name="croppedImage3" id="croppedImage3">
                     </div>                                        
                   </div> 
                     <div class="form-row">
                       <div class="form-group col-md-2">
-                        <label for="dataNascimento">Data da Foto:</label>
-                        <input type="date" class="form-control" id="dataNascimento" name="dataNascimento" min="1900-01-01">
+                        <label for="dataNascimento">Data das fotos:</label>
+                        <input type="date" class="form-control" id="data_fotos" name="data_fotos" min="2023-01-01">
                       </div>
                       <div class="form-group col-md-2">
-                        <label for="origemFoto">Origem da Foto:</label>
-                        <select class="form-control" id="origemFoto" name="origemFoto">
+                        <label for="origem_fotos">Origem da Foto:</label>
+                        <select class="form-control" id="origem_fotos" name="origem_fotos" required>
                           <option>1ª DM</option>
                           <option>2ª DM</option>
                           <option>3ª DM</option>
@@ -78,20 +81,19 @@
                         </select>
                       </div>
                       <div class="form-group col-md-6">
-                        <label for="nomeCompleto">Nome Completo:</label>
-                        <input type="text" class="form-control" id="nomeCompleto" name="nomeCompleto" required>
+                        <label for="nome_completo">Nome Completo:</label>
+                        <input type="text" class="form-control" id="nome_completo" name="nome_completo" required>
                       </div>
                       <div class="form-group col-md-2">
-                        <label for="dataNascimento">Data de Nascimento:</label>
-                        <input type="date" class="form-control" id="dataNascimento" name="dataNascimento" min="1900-01-01">
+                        <label for="data_nascimento">Data de Nascimento:</label>
+                        <input type="date" class="form-control" id="data_nascimento" name="data_nascimento" min="1900-01-01">
                       </div>
                     </div>
 
                     <div class="form-row">
-                      
                       <div class="form-group col-md-4">
                         <label for="mae">Mãe:</label>
-                        <input type="text" class="form-control" id="mae" name="mae">
+                        <input type="text" class="form-control" id="mae" name="mae" required>
                       </div>
                       <div class="form-group col-md-4">
                         <label for="pai">Pai:</label>
@@ -113,7 +115,6 @@
                   </div>
 
                     <div class="form-row">
-                      
                       <div class="form-group col-md-2">
                         <label for="cpf">CPF:</label>
                         <input type="text" class="form-control" id="cpf" name="cpf" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}" title="Por favor, insira o CPF completo...">
@@ -133,15 +134,16 @@
                       </div>
 
                       <div class="form-group col-md-2">
-                        <label for="cadastrador">Razão da prisão</label>
-                        <select class="form-control" id="morto" name="morto">
-                          <option value="0">Mandado de Prisão</option>
-                          <option value="1">APF</option>
+                        <label for="razao_prisao">Tipo de prisão:</label>
+                        <select class="form-control" id="razao_prisao" name="razao_prisao" required>                        
+                          <option>APF</option>
+                          <option>Mandado de Prisão</option>
+                          <option>Prisão Cível</option>
                         </select>
                       </div>
                       <div class="form-group col-md-3">
-                        <label for="sap">Número:</label>
-                        <input type="text" class="form-control" id="sap" name="sap" pattern="\d*" inputmode="numeric" title="Por favor, insira apenas números.">
+                        <label for="numero_procedimento">Número do procedimento ou mandado:</label>
+                        <input type="text" class="form-control" id="numero_procedimento" name="numero_procedimento" required>
                       </div>
                     </div>
 
@@ -152,7 +154,7 @@
                       </div>
                       <div class="form-group col-md-3 d-flex align-items-end justify-content-between">
                         <button type="submit" class="btn btn-primary" style="width: 48%;">Enviar</button>
-                        <a href="/mandados" class="btn btn-danger" style="width: 48%;">Cancelar</a>
+                        <a href="/presos" class="btn btn-danger" style="width: 48%;">Cancelar</a>
                       </div>
                     </div>
                   </form>
@@ -170,7 +172,7 @@
   <div class="modal-dialog" role="document" style="max-height: 90%;">
     <div class="modal-content" style="padding: 10px;">
       <div class="modal-header" style="padding: 10px;">
-        <h5 class="modal-title" id="modalLabel">Corte a imagem</h5>
+        <h5 class="modal-title" id="modalLabel">Formate a imagem</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">×</span>
         </button>
