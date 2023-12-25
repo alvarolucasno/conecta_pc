@@ -80,7 +80,14 @@
                           <option value="COPE" {% if preso.origem_fotos == "COPE" %}selected{% endif %}>COPE</option>
                         </select>                        
                       </div>
-                      <div class="form-group col-md-6">
+                      <div class="form-group col-md-1">
+                        <label for="sexo">Sexo:</label>
+                        <select class="form-control" id="sexo" name="sexo" required>
+                          <option value="M" {% if preso.sexo == "M" %}selected{% endif %}>M</option>
+                          <option value="F" {% if preso.sexo == "F" %}selected{% endif %}>F</option>
+                        </select>
+                      </div>
+                      <div class="form-group col-md-5">
                         <label for="nome_completo">Nome Completo:</label>
                         <input type="text" class="form-control" id="nome_completo" name="nome_completo" value="{{ preso.nome_completo }}" required>
                       </div>

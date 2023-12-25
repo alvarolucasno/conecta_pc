@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login
 from django.core.exceptions import ValidationError
 from django.http import HttpResponse
 from tabelas_apoio.models import Cidade
-from utils import db_mandados, conector_ftp
+from utils import db_mandados, conector_ftp, salvar_bot_telegram
 from io import BytesIO
 from datetime import datetime
 from django.contrib import messages
@@ -38,6 +38,7 @@ def cadastrar_preso(request):
             novo_preso = Preso(
                 data_fotos=request.POST.get('data_fotos'),
                 origem_fotos=request.POST.get('origem_fotos'),
+                sexo = request.POST.get('sexo'),
                 nome_completo=request.POST.get('nome_completo'),
                 data_nascimento=request.POST.get('data_nascimento'),
                 mae=request.POST.get('mae'),
@@ -69,7 +70,9 @@ def cadastrar_preso(request):
                         novo_preso.frontal.save(f'{novo_preso.nome_completo}_frontal.{ext}', image)
                     elif i == 3:
                         novo_preso.perfil_direito.save(f'{novo_preso.nome_completo}_direito.{ext}', image)
-                        
+                  
+            informacao = f"Individuo preso em virtude do(a) {novo_preso.razao_prisao} nº {novo_preso.numero_procedimento}"
+            salvar_bot_telegram.chamada_api(novo_preso.nome_completo, novo_preso.data_nascimento, novo_preso.mae, (request.POST.get(f'croppedImage{2}').split(';base64,')[1]), informacao)      
             messages.success(request, 'Dados salvos com sucesso!')
             return redirect('listar_presos')
         
@@ -99,6 +102,7 @@ def editar_preso(request, preso_id):
             preso.data_fotos = request.POST.get('data_fotos')
             preso.origem_fotos = request.POST.get('origem_fotos')
             preso.nome_completo = request.POST.get('nome_completo')
+            preso.sexo = request.POST.get('sexo'),
             preso.data_nascimento = request.POST.get('data_nascimento')
             preso.mae = request.POST.get('mae')
             preso.pai = request.POST.get('pai', '')  # Considerando que pai pode ser opcional

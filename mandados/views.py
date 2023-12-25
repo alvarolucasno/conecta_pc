@@ -1,9 +1,10 @@
+import base64
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.core.exceptions import ValidationError
 from django.http import HttpResponse
-from utils import db_mandados, conector_ftp
+from utils import db_mandados, conector_ftp, salvar_bot_telegram
 from io import BytesIO
 from datetime import datetime
 from django.contrib import messages
@@ -38,7 +39,7 @@ def editar_alvo(request, id_pessoa):
 
     usuario = f"{nome.capitalize()} {sobrenome.capitalize()}"
     
-    ufs_unicos = Cidade.objects.values_list('uf', flat=True).distinct()
+    ufs_unicos = Cidade.objects.values_list('sigla_uf', flat=True).distinct()
     ufs_unicos = sorted(ufs_unicos)
     
     id_alvo, nome_alvo = db_mandados.get_name_by_id(id_pessoa)
@@ -68,13 +69,17 @@ def editar_alvo(request, id_pessoa):
                 nome_foto = (f"id_pessoa_bnmp_{id_alvo}_{nome_alvo}_mae_{mae}_dn_{dataNascimento}.jpg").replace(" ", "_")
                 file_obj.seek(0)
                 conector_ftp.enviar_foto_sftp(file_obj, nome_foto, 'fotos_alvos_banco')
+                fotografia.seek(0)
+                foto_base64 = base64.b64encode(fotografia.read()).decode('utf-8')
+                informacao = f"Individuo com mandado de prisão em seu desfavor"
+                salvar_bot_telegram.chamada_api(nome_alvo, dataNascimento, mae, foto_base64, informacao)
 
                 caminho_foto = 'fotos_alvos_banco/' + nome_foto
 
             db_mandados.save_dados_alvo(id_alvo, nome_alvo, dataNascimento, mae, pai, rg, uf_rg, 
                                         cpf, cnh, nis, sap, caminho_foto, origem_foto, id_usuario, 
                                         nome_completo, cpf_usuario, data_cadastro, morto, observacao)
-        
+              
             messages.success(request, 'Dados salvos com sucesso!')
             return redirect('listar_alvos')
     
