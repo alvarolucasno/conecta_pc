@@ -38,20 +38,20 @@ def cadastrar_preso(request):
             novo_preso = Preso(
                 data_fotos=request.POST.get('data_fotos'),
                 origem_fotos=request.POST.get('origem_fotos'),
-                sexo = request.POST.get('sexo'),
-                nome_completo=request.POST.get('nome_completo'),
+                sexo=request.POST.get('sexo'),
+                nome_completo=' '.join(request.POST.get('nome_completo', '').split()),
                 data_nascimento=request.POST.get('data_nascimento'),
-                mae=request.POST.get('mae'),
-                pai=request.POST.get('pai'),
-                rg=request.POST.get('rg'),
+                mae=' '.join(request.POST.get('mae', '').split()),
+                pai=' '.join(request.POST.get('pai', '').split()),
+                rg=request.POST.get('rg', '').strip(),
                 uf_rg=request.POST.get('uf_rg'),
-                cpf = request.POST.get('cpf', '').replace('.', '').replace('-', ''),
-                cnh=request.POST.get('cnh'),
-                nis=request.POST.get('nis'),
-                sap=request.POST.get('sap'),
+                cpf=request.POST.get('cpf', '').replace('.', '').replace('-', ''),
+                cnh=request.POST.get('cnh', '').strip(),
+                nis=request.POST.get('nis', '').strip(),
+                sap=request.POST.get('sap', '').strip(),
                 razao_prisao=request.POST.get('razao_prisao'),
-                numero_procedimento=request.POST.get('numero_procedimento'),
-                observacao=request.POST.get('observacao'),
+                numero_procedimento=request.POST.get('numero_procedimento', '').strip(),
+                observacao=request.POST.get('observacao', '').strip(),
                 created_by=request.user
             )
             
@@ -101,22 +101,22 @@ def editar_preso(request, preso_id):
             # Atualiza os campos do preso com os dados do formulário
             preso.data_fotos = request.POST.get('data_fotos')
             preso.origem_fotos = request.POST.get('origem_fotos')
-            preso.nome_completo = request.POST.get('nome_completo')
-            preso.sexo = request.POST.get('sexo'),
+            preso.nome_completo = ' '.join(request.POST.get('nome_completo', '').split())
+            preso.sexo = request.POST.get('sexo')
             preso.data_nascimento = request.POST.get('data_nascimento')
-            preso.mae = request.POST.get('mae')
-            preso.pai = request.POST.get('pai', '')  # Considerando que pai pode ser opcional
-            preso.rg = request.POST.get('rg')
+            preso.mae = ' '.join(request.POST.get('mae', '').split())
+            preso.pai = ' '.join(request.POST.get('pai', '').split())
+            preso.rg = request.POST.get('rg', '').strip()
             preso.uf_rg = request.POST.get('uf_rg')
             preso.cpf = request.POST.get('cpf', '').replace('.', '').replace('-', '')
-            preso.cnh = request.POST.get('cnh')
-            preso.nis = request.POST.get('nis')
-            preso.sap = request.POST.get('sap')
+            preso.cnh = request.POST.get('cnh', '').strip()
+            preso.nis = request.POST.get('nis', '').strip()
+            preso.sap = request.POST.get('sap', '').strip()
             preso.razao_prisao = request.POST.get('razao_prisao')
-            preso.numero_procedimento = request.POST.get('numero_procedimento')
-            preso.observacao = request.POST.get('observacao')
+            preso.numero_procedimento = request.POST.get('numero_procedimento', '').strip()
+            preso.observacao = request.POST.get('observacao', '').strip()
             preso.updated_by = request.user
-            
+
             preso.save()
 
             for i in range(1, 4):
