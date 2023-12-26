@@ -71,7 +71,7 @@ def editar_alvo(request, id_pessoa):
                 conector_ftp.enviar_foto_sftp(file_obj, nome_foto, 'fotos_alvos_banco')
                 fotografia.seek(0)
                 foto_base64 = base64.b64encode(fotografia.read()).decode('utf-8')
-                informacao = f"Individuo com mandado de prisão em seu desfavor"
+                informacao = f"Individuo com mandado de prisão em seu desfavor em {data_cadastro}"
                 salvar_bot_telegram.chamada_api(nome_alvo, dataNascimento, mae, foto_base64, informacao)
 
                 caminho_foto = 'fotos_alvos_banco/' + nome_foto
