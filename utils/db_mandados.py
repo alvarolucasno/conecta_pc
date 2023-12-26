@@ -63,7 +63,7 @@ def get_name_by_id(id):
     with mysql.connector.connect(**DB_CONFIG) as conn:
         with conn.cursor() as cursor:
             query = '''
-            SELECT 
+            SELECT DISTINCT
                 id_pessoa,
                 outrosNomes as nome_pesssoa
             FROM mandados_bnmp.mandados_prisao_criminais_sergipe
