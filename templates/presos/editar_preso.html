@@ -348,6 +348,26 @@
   });
   
 </script>
+
+<script>
+  document.getElementById('data_nascimento').addEventListener('paste', function(e) {
+    // Impede o comportamento padrão de colagem
+    e.preventDefault();
+
+    // Pega o texto colado
+    var text = (e.clipboardData || window.clipboardData).getData('text');
+
+    // Converte a data de dd/mm/aaaa para aaaa-mm-dd
+    if (/^\d{2}\/\d{2}\/\d{4}$/.test(text)) {
+      var parts = text.split('/');
+      var formattedDate = parts[2] + '-' + parts[1] + '-' + parts[0];
+
+      // Define o valor do campo com a nova data formatada
+      e.target.value = formattedDate;
+    }
+  });
+</script>
+
 {% endblock %}
 
 
