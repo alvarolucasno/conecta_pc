@@ -21,6 +21,7 @@ def listar_presos(request):
     nome = request.user.first_name
     sobrenome = request.user.last_name
     foto = request.user.foto
+    cargo = request.user.cargo
     usuario = f"{nome.capitalize()} {sobrenome.capitalize()}"
 
     lista_presos = Preso.objects.all()
@@ -28,7 +29,8 @@ def listar_presos(request):
     return render(request, 'presos/listar_presos.html', {
         'user_name': usuario, 
         'foto': foto,
-        'presos': lista_presos
+        'presos': lista_presos,
+        'cargo': cargo
     })
     
 @login_required(login_url='/login/')
@@ -84,13 +86,14 @@ def cadastrar_preso(request):
     nome = request.user.first_name
     sobrenome = request.user.last_name
     foto = request.user.foto
+    cargo = request.user.cargo
 
     ufs_unicos = Cidade.objects.values_list('uf', flat=True).distinct()
     ufs_unicos = sorted(ufs_unicos)
 
     usuario = f"{nome.capitalize()} {sobrenome.capitalize()}"
 
-    return render(request, 'presos/cadastrar.html', {'user_name': usuario, 'foto': foto, 'ufs': ufs_unicos})
+    return render(request, 'presos/cadastrar.html', {'user_name': usuario, 'foto': foto, 'cargo': cargo, 'ufs': ufs_unicos})
 
 @login_required(login_url='/login/')
 def editar_preso(request, preso_id):
@@ -142,15 +145,16 @@ def editar_preso(request, preso_id):
     nome = request.user.first_name
     sobrenome = request.user.last_name
     foto = request.user.foto
+    cargo = request.user.cargo
     usuario = f"{nome.capitalize()} {sobrenome.capitalize()}"
 
     ufs_unicos = Cidade.objects.values_list('uf', flat=True).distinct()
     ufs_unicos = sorted(ufs_unicos)
 
-    # Renderizar a página de edição com os dados existentes do preso
     return render(request, 'presos/editar_preso.html', {
         'user_name': usuario,
         'foto': foto,
         'ufs': ufs_unicos,
-        'preso': preso
+        'preso': preso,
+        'cargo': cargo
     })

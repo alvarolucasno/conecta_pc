@@ -18,12 +18,13 @@ def listar_alvos(request):
     nome = request.user.first_name
     sobrenome = request.user.last_name
     foto = request.user.foto
+    cargo = request.user.cargo
 
     mandados = db_mandados.get_mandados()
 
     usuario = f"{nome.capitalize()} {sobrenome.capitalize()}"
 
-    context = {'user_name': usuario, 'foto': foto, 'dados': mandados}
+    context = {'user_name': usuario, 'foto': foto, 'cargo': cargo ,'dados': mandados}
 
     return render(request, 'mandados/listar_alvos.html', context)
 
@@ -35,6 +36,7 @@ def editar_alvo(request, id_pessoa):
     nome_completo = request.user.nome_completo
     id_usuario = request.user.id
     cpf_usuario = request.user.cpf
+    cargo = request.user.cargo
     
     foto = request.user.foto
 
@@ -89,4 +91,4 @@ def editar_alvo(request, id_pessoa):
         except Exception as e:
             messages.error(request, f'Erro ao salvar os dados: {e}')
     
-    return render(request, 'mandados/editar_pessoa.html', {'user_name': usuario, 'foto': foto, 'id_alvo': id_alvo, 'nome_alvo': nome_alvo.upper(), 'ufs': ufs_unicos})
+    return render(request, 'mandados/editar_pessoa.html', {'user_name': usuario, 'foto': foto, 'cargo': cargo, 'id_alvo': id_alvo, 'nome_alvo': nome_alvo.upper(), 'ufs': ufs_unicos})
