@@ -56,7 +56,7 @@
               <tbody>
                 {% for preso in presos %}
                   <tr>
-                    <td><img src="{{ preso.frontal.url }}" alt="Foto" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;"></td>
+                    <td><img src="{{ preso.avatar.url }}" alt="Foto" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;"></td>
                     <td style="text-align: center; vertical-align: middle;">{{ preso.nome_completo }}</td>
                     <td style="text-align: center; vertical-align: middle;">{{ preso.mae }}</td>
                     <td style="text-align: center; vertical-align: middle;">{{ preso.cpf|slice:":3" }}.{{ preso.cpf|slice:"3:6" }}.{{ preso.cpf|slice:"6:9" }}-{{ preso.cpf|slice:"9:11" }}</td>
