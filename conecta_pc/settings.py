@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'mandados',
     'presos',
     'tabelas_apoio',
+    'servidores',
 ]
 
 MIDDLEWARE = [

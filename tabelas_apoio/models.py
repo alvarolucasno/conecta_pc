@@ -16,3 +16,15 @@ class Cidade(models.Model):
 
     def __str__(self):
         return self.cidade
+
+class Idioma(models.Model):
+    nome = models.CharField(max_length=100, unique=True)
+    codigo_iso = models.CharField(max_length=10, unique=True)
+
+    class Meta:
+        verbose_name = 'idioma'
+        verbose_name_plural = 'idiomas'
+        ordering = ['nome']
+        
+    def __str__(self):
+        return self.nome
