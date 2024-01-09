@@ -15,32 +15,26 @@ from tabelas_apoio.models import Cidade
 @login_required(login_url='/login/')
 def listar_alvos(request):
     
-    nome = request.user.first_name
-    sobrenome = request.user.last_name
-    foto = request.user.foto
-    cargo = request.user.cargo
+    cargo = "Agente de Polícia Civil"
+    nome_completo = request.user.nome_completo.split()
+    user_name = nome_completo[0] + ' ' + nome_completo[-1] if len(nome_completo) >= 2 else nome_completo[0]
 
     mandados = db_mandados.get_mandados()
 
-    usuario = f"{nome.capitalize()} {sobrenome.capitalize()}"
 
-    context = {'user_name': usuario, 'foto': foto, 'cargo': cargo ,'dados': mandados}
+    context = {'user_name': user_name, 'cargo': cargo ,'dados': mandados}
 
     return render(request, 'mandados/listar_alvos.html', context)
 
 @login_required(login_url='/login/')
 def editar_alvo(request, id_pessoa):
     
-    nome = request.user.first_name
-    sobrenome = request.user.last_name
-    nome_completo = request.user.nome_completo
+    cargo = "Agente de Polícia Civil"
+    nome_completo = request.user.nome_completo.split()
+    user_name = nome_completo[0] + ' ' + nome_completo[-1] if len(nome_completo) >= 2 else nome_completo[0]
+
     id_usuario = request.user.id
     cpf_usuario = request.user.cpf
-    cargo = request.user.cargo
-    
-    foto = request.user.foto
-
-    usuario = f"{nome.capitalize()} {sobrenome.capitalize()}"
     
     ufs_unicos = Cidade.objects.values_list('sigla_uf', flat=True).distinct()
     ufs_unicos = sorted(ufs_unicos)
@@ -91,4 +85,4 @@ def editar_alvo(request, id_pessoa):
         except Exception as e:
             messages.error(request, f'Erro ao salvar os dados: {e}')
     
-    return render(request, 'mandados/editar_pessoa.html', {'user_name': usuario, 'foto': foto, 'cargo': cargo, 'id_alvo': id_alvo, 'nome_alvo': nome_alvo.upper(), 'ufs': ufs_unicos})
+    return render(request, 'mandados/editar_pessoa.html', {'user_name': user_name, 'cargo': cargo, 'id_alvo': id_alvo, 'nome_alvo': nome_alvo.upper(), 'ufs': ufs_unicos})

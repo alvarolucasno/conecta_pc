@@ -18,17 +18,15 @@ from .models import Preso
 
 @login_required(login_url='/login/')
 def listar_presos(request):
-    nome = request.user.first_name
-    sobrenome = request.user.last_name
-    foto = request.user.foto
-    cargo = request.user.cargo
-    usuario = f"{nome.capitalize()} {sobrenome.capitalize()}"
+    
+    cargo = "Agente de Polícia Civil"
+    nome_completo = request.user.nome_completo.split()
+    user_name = nome_completo[0] + ' ' + nome_completo[-1] if len(nome_completo) >= 2 else nome_completo[0]
 
     lista_presos = Preso.objects.all()
 
     return render(request, 'presos/listar_presos.html', {
-        'user_name': usuario, 
-        'foto': foto,
+        'user_name': user_name,
         'presos': lista_presos,
         'cargo': cargo
     })
@@ -86,17 +84,14 @@ def cadastrar_preso(request):
         except Exception as e:
             messages.error(request, f'Erro ao salvar os dados: {e}')
     
-    nome = request.user.first_name
-    sobrenome = request.user.last_name
-    foto = request.user.foto
-    cargo = request.user.cargo
+    cargo = "Agente de Polícia Civil"
+    nome_completo = request.user.nome_completo.split()
+    user_name = nome_completo[0] + ' ' + nome_completo[-1] if len(nome_completo) >= 2 else nome_completo[0]
 
     ufs_unicos = Cidade.objects.values_list('uf', flat=True).distinct()
     ufs_unicos = sorted(ufs_unicos)
 
-    usuario = f"{nome.capitalize()} {sobrenome.capitalize()}"
-
-    return render(request, 'presos/cadastrar.html', {'user_name': usuario, 'foto': foto, 'cargo': cargo, 'ufs': ufs_unicos})
+    return render(request, 'presos/cadastrar.html', {'user_name': user_name, 'cargo': cargo, 'ufs': ufs_unicos})
 
 @login_required(login_url='/login/')
 def editar_preso(request, preso_id):
@@ -145,18 +140,15 @@ def editar_preso(request, preso_id):
         except Exception as e:
             messages.error(request, f'Erro ao atualizar os dados: {e}')
 
-    nome = request.user.first_name
-    sobrenome = request.user.last_name
-    foto = request.user.foto
-    cargo = request.user.cargo
-    usuario = f"{nome.capitalize()} {sobrenome.capitalize()}"
+    cargo = "Agente de Polícia Civil"
+    nome_completo = request.user.nome_completo.split()
+    user_name = nome_completo[0] + ' ' + nome_completo[-1] if len(nome_completo) >= 2 else nome_completo[0]
 
     ufs_unicos = Cidade.objects.values_list('uf', flat=True).distinct()
     ufs_unicos = sorted(ufs_unicos)
 
     return render(request, 'presos/editar_preso.html', {
-        'user_name': usuario,
-        'foto': foto,
+        'user_name': user_name,
         'ufs': ufs_unicos,
         'preso': preso,
         'cargo': cargo

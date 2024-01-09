@@ -6,14 +6,12 @@ from django.contrib import messages
 
 @login_required(login_url='/login/')
 def home(request):
-    first_name = request.user.first_name
-    last_name = request.user.last_name
-    foto = request.user.foto
-    cargo = request.user.cargo
+    
+    cargo = "Agente de Polícia Civil"
+    nome_completo = request.user.nome_completo.split()
+    user_name = nome_completo[0] + ' ' + nome_completo[-1] if len(nome_completo) >= 2 else nome_completo[0]
 
-    user_name = f"{first_name.capitalize()} {last_name.capitalize()}"
-
-    context = {'user_name': user_name, 'cargo': cargo, 'foto': foto}
+    context = {'user_name': user_name, 'cargo': cargo}
 
     return render(request, 'home/index.html', context)
 
@@ -33,10 +31,6 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('/login/')
-
-
-
-
 
 
 
