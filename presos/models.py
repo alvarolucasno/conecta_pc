@@ -7,16 +7,16 @@ from io import BytesIO
 from django.core.files.base import ContentFile
 
 def upload_to_perfil_esquerdo(instance, filename):
-    return f'presos/{slugify(instance.nome_completo)}_{slugify(instance.mae)}/{slugify(instance.nome_completo)}_{instance.data_fotos}_perfil_esquerdo.jpg'
+    return f'presos/{slugify(instance.nome_completo)}_mae_{slugify(instance.mae)}/{instance.data_fotos}_perfil_esquerdo.jpg'
 
 def upload_to_frontal(instance, filename):
-    return f'presos/{slugify(instance.nome_completo)}_{slugify(instance.mae)}/{slugify(instance.nome_completo)}_{instance.data_fotos}_face.jpg'
+    return f'presos/{slugify(instance.nome_completo)}_mae_{slugify(instance.mae)}/{instance.data_fotos}_face.jpg'
 
 def upload_to_avatar(instance, filename):
-    return f'presos/{slugify(instance.nome_completo)}_{slugify(instance.mae)}/{slugify(instance.nome_completo)}_{instance.data_fotos}_avatar.jpg'
+    return f'presos/{slugify(instance.nome_completo)}_mae_{slugify(instance.mae)}/{instance.data_fotos}_avatar.jpg'
 
 def upload_to_perfil_direito(instance, filename):
-    return f'presos/{slugify(instance.nome_completo)}_{slugify(instance.mae)}/{slugify(instance.nome_completo)}_{instance.data_fotos}_perfil_direito.jpg'
+    return f'presos/{slugify(instance.nome_completo)}_mae_{slugify(instance.mae)}/{instance.data_fotos}_perfil_direito.jpg'
 
 class Preso(models.Model):
     # Fotos
