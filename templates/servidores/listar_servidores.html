@@ -1,0 +1,167 @@
+{% extends 'partials/_base.html' %}
+
+{% load static %}
+
+{% block title %}Conecta PC | Servidores{% endblock %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+  <link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+  <link rel="stylesheet" href="{% static 'plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
+  <link rel="stylesheet" href="{% static 'plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
+  <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="#">Serviços</a></li>
+          <li class="breadcrumb-item active">Servidores</li>
+          <li class="breadcrumb-item active">Listar</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Servidores</h3>
+              </div>
+          <div class="card-body">
+            <table id="presos" class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th style="width: 6%; text-align: center; vertical-align: middle;">Foto</th>
+                  <th style="width: 30%; text-align: center; vertical-align: middle;">Nome</th>
+                  <th style="width: 25%; text-align: center; vertical-align: middle;">Cargo</th>
+                  <th style="width: 11%; text-align: center; vertical-align: middle;">CPF</th>
+                  <th style="width: 6%; text-align: center; vertical-align: middle;">Sexo</th>
+                  <th style="width: 5%; text-align: center; vertical-align: middle;">Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for servidor in servidores %}
+                  <tr>
+                    <td><img src="{{ servidor.avatar.url }}" alt="Foto" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;"></td>
+                    <td style="text-align: center; vertical-align: middle;">{{ servidor.nome_completo }}</td>
+                    <td style="text-align: center; vertical-align: middle;">{{ servidor.cargo_recente_nome }}</td>
+                    <td style="text-align: center; vertical-align: middle;">{{ servidor.cpf|slice:":3" }}.{{ servidor.cpf|slice:"3:6" }}.{{ servidor.cpf|slice:"6:9" }}-{{ servidor.cpf|slice:"9:11" }}</td>
+                    <td style="text-align: center; vertical-align: middle;">{{ servidor.sexo }}</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                      <a href="#">
+                        <img src="insira um padrao de modelo" width="30" height="30" alt="Exibir">
+                      </a>
+                      <a href="#">
+                        <img src="insira um padrao de modelo" width="30" height="30" alt="Editar">
+                      </a>
+                      <a href="#" onclick="return confirm('Tem certeza que deseja excluir este servidor?');">
+                        <img src="insira um padrao de modelo" width="30" height="30" alt="Excluir">
+                      </a>
+                    </td>
+                  </tr>
+                {% empty %}
+                  <tr>
+                    <td colspan="9">Nenhum servidor cadastrado.</td>
+                  </tr>
+                {% endfor %}
+            </tbody>            
+            </table>
+            <div class="d-flex justify-content-end">
+              <a href="#" class="btn btn-primary mt-3" style="width: 16%;">Cadastrar Servidor</a>
+          </div>
+          
+          </div>
+        </div>
+          <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+      </div>
+      <!-- /.col -->
+    </div>
+    <!-- /.row -->
+  </div>
+
+  <!-- /.container-fluid -->
+</section>
+
+</div>
+<!-- /.content -->
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/jszip/jszip.min.js' %}"></script>
+<script src="{% static 'plugins/pdfmake/pdfmake.min.js' %}"></script>
+<script src="{% static 'plugins/pdfmake/vfs_fonts.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.print.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.colVis.min.js' %}"></script>
+<!-- / <script src="{% static 'dist/js/adminlte.min.js' %}"></script>  -->
+<!-- / <script src="{% static 'dist/js/demo.js' %}"></script>  -->
+
+<script>
+  $(function () {
+    $("#presos").DataTable({
+      "responsive": true,
+      "lengthChange": true,
+      "autoWidth": false,
+      "buttons": [
+        "csv",
+        "excel",
+        {
+          text: 'Imprimir', // Substitui o texto "print" por "Imprimir"
+          extend: 'print', // Mantém a funcionalidade de impressão
+        }
+      ],
+      "paging": true,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "order": [[1, 'asc']],
+      "lengthMenu": [[5, 10, 25, 50, 100], [5, 10, 25, 50, 100]], // Define as opções de quantidade de registros por página
+      "language": {
+        "sEmptyTable": "Nenhum registro encontrado",
+        "sInfo": "Mostrando _START_ até _END_ de _TOTAL_ registros",
+        "sInfoEmpty": "Mostrando 0 até 0 de 0 registros",
+        "sInfoFiltered": "(Filtrados de _MAX_ registros)",
+        "sInfoPostFix": "",
+        "sInfoThousands": ".",
+        "sLengthMenu": "_MENU_ resultados por página",
+        "sLoadingRecords": "Carregando...",
+        "sProcessing": "Processando...",
+        "sZeroRecords": "Nenhum registro encontrado",
+        "sSearch": "Pesquisar",
+        "oPaginate": {
+          "sNext": "Próximo",
+          "sPrevious": "Anterior",
+          "sFirst": "Primeiro",
+          "sLast": "Último"
+        },
+        "oAria": {
+          "sSortAscending": ": Ordenar colunas de forma ascendente",
+          "sSortDescending": ": Ordenar colunas de forma descendente"
+        }
+      }
+    }).buttons().container().appendTo('#presos_wrapper .col-md-6:eq(0)');
+  });
+</script>
+{% endblock %}

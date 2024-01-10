@@ -11,7 +11,8 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('teste/', views.teste, name='teste'),
     path('mandados/', include('mandados.urls')),
-    path('presos/', include('presos.urls'))
+    path('presos/', include('presos.urls')),
+    path('servidores/', include('servidores.urls')),
 ]
 
 if settings.DEBUG:
