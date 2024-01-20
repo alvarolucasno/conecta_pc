@@ -20,10 +20,10 @@ def upload_to_perfil_direito(instance, filename):
 
 class Preso(models.Model):
     # Fotos
-    perfil_esquerdo = models.ImageField(upload_to=upload_to_perfil_esquerdo)
-    frontal = models.ImageField(upload_to=upload_to_frontal)
-    avatar = models.ImageField(upload_to=upload_to_avatar, null=True, blank=True)
-    perfil_direito = models.ImageField(upload_to=upload_to_perfil_direito)
+    perfil_esquerdo = models.ImageField(upload_to=upload_to_perfil_esquerdo, max_length=255)
+    frontal = models.ImageField(upload_to=upload_to_frontal, max_length=255)
+    avatar = models.ImageField(upload_to=upload_to_avatar, null=True, blank=True, max_length=255)
+    perfil_direito = models.ImageField(upload_to=upload_to_perfil_direito, max_length=255)
     
     # Datas e strings
     data_fotos = models.DateField()
