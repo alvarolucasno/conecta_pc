@@ -14,12 +14,16 @@ from django.utils.text import slugify
 import base64
 from django.core.files.base import ContentFile
 import json
-from .models import Preso 
+from .models import Preso
+from servidores.models import Cargo, Servidor
 
 @login_required(login_url='/login/')
 def listar_presos(request):
     
-    cargo = "Agente de Polícia Civil"
+    cpf_do_usuario = request.user.cpf
+    servidor = get_object_or_404(Servidor, cpf=cpf_do_usuario)
+    cargo = get_object_or_404(Cargo, servidor=servidor, cargo_atual=True)
+    foto = servidor.foto
     nome_completo = request.user.nome_completo.split()
     user_name = nome_completo[0] + ' ' + nome_completo[-1] if len(nome_completo) >= 2 else nome_completo[0]
 
@@ -28,7 +32,8 @@ def listar_presos(request):
     return render(request, 'presos/listar_presos.html', {
         'user_name': user_name,
         'presos': lista_presos,
-        'cargo': cargo
+        'cargo': cargo.cargo, 
+        'foto': foto
     })
     
 @login_required(login_url='/login/')
@@ -84,14 +89,17 @@ def cadastrar_preso(request):
         except Exception as e:
             messages.error(request, f'Erro ao salvar os dados: {e}')
     
-    cargo = "Agente de Polícia Civil"
+    cpf_do_usuario = request.user.cpf
+    servidor = get_object_or_404(Servidor, cpf=cpf_do_usuario)
+    cargo = get_object_or_404(Cargo, servidor=servidor, cargo_atual=True)
+    foto = servidor.foto
     nome_completo = request.user.nome_completo.split()
     user_name = nome_completo[0] + ' ' + nome_completo[-1] if len(nome_completo) >= 2 else nome_completo[0]
 
     ufs_unicos = Cidade.objects.values_list('uf', flat=True).distinct()
     ufs_unicos = sorted(ufs_unicos)
 
-    return render(request, 'presos/cadastrar.html', {'user_name': user_name, 'cargo': cargo, 'ufs': ufs_unicos})
+    return render(request, 'presos/cadastrar.html', {'user_name': user_name, 'cargo': cargo.cargo, 'foto': foto, 'ufs': ufs_unicos})
 
 @login_required(login_url='/login/')
 def editar_preso(request, preso_id):
@@ -140,7 +148,10 @@ def editar_preso(request, preso_id):
         except Exception as e:
             messages.error(request, f'Erro ao atualizar os dados: {e}')
 
-    cargo = "Agente de Polícia Civil"
+    cpf_do_usuario = request.user.cpf
+    servidor = get_object_or_404(Servidor, cpf=cpf_do_usuario)
+    cargo = get_object_or_404(Cargo, servidor=servidor, cargo_atual=True)
+    foto = servidor.foto
     nome_completo = request.user.nome_completo.split()
     user_name = nome_completo[0] + ' ' + nome_completo[-1] if len(nome_completo) >= 2 else nome_completo[0]
 
@@ -151,5 +162,6 @@ def editar_preso(request, preso_id):
         'user_name': user_name,
         'ufs': ufs_unicos,
         'preso': preso,
-        'cargo': cargo
+        'cargo': cargo.cargo, 
+        'foto': foto
     })
