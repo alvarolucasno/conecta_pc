@@ -10,6 +10,7 @@ from PIL import Image
 from django.core.validators import RegexValidator
 from unidades.models import Unidades
 from tabelas_apoio.models import Idioma
+from users.models import CustomUser
 
 def upload_foto_servidor(instance, filename):
     return f'fotos_servidores/{slugify(instance.nome_completo)}_cpf_{slugify(instance.cpf)}/{instance.created_at.strftime("%Y-%m-%d")}_foto.jpg'
@@ -91,6 +92,7 @@ class Servidor(models.Model):
         return self.nome_completo
     
     def save(self, *args, **kwargs):
+
         if self.foto:
             self.compress_image(self.foto)
 
@@ -98,6 +100,19 @@ class Servidor(models.Model):
             self.create_avatar()
 
         super().save(*args, **kwargs)
+
+        if not CustomUser.objects.filter(cpf=self.cpf).exists():
+            email_funcional = self.email_funcional
+
+            # Criar um novo usuário com os dados do Servidor
+            CustomUser.objects.create_user(
+                email_funcional=email_funcional,
+                nome_completo=self.nome_completo,
+                cpf=self.cpf,
+                password=self.cpf
+            )
+        else:
+            pass     
 
     def compress_image(self, image_field):
         image = Image.open(image_field)
