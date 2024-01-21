@@ -13,10 +13,17 @@ from tabelas_apoio.models import Idioma
 from users.models import CustomUser
 
 def upload_foto_servidor(instance, filename):
-    return f'fotos_servidores/{slugify(instance.nome_completo)}_cpf_{slugify(instance.cpf)}/{instance.created_at.strftime("%Y-%m-%d")}_foto.jpg'
+    if instance.created_at:
+        return f'fotos_servidores/{slugify(instance.nome_completo)}_cpf_{slugify(instance.cpf)}/{instance.created_at.strftime("%Y-%m-%d")}_foto.jpg'
+    else:
+        return f'fotos_servidores/{slugify(instance.nome_completo)}_cpf_{slugify(instance.cpf)}/foto.jpg'
 
 def upload_avatar_servidor(instance, filename):
-    return f'fotos_servidores/{slugify(instance.nome_completo)}_cpf_{slugify(instance.cpf)}/{instance.created_at.strftime("%Y-%m-%d")}_avatar.jpg'
+    if instance.created_at:
+        return f'fotos_servidores/{slugify(instance.nome_completo)}_cpf_{slugify(instance.cpf)}/{instance.created_at.strftime("%Y-%m-%d")}_avatar.jpg'
+    else:
+        return f'fotos_servidores/{slugify(instance.nome_completo)}_cpf_{slugify(instance.cpf)}/avatar.jpg'
+
 
 class Servidor(models.Model):
     
@@ -51,8 +58,8 @@ class Servidor(models.Model):
     nacionalidade = models.CharField(max_length=250, null=True, blank=True)
     
     # FOTO
-    foto = models.ImageField(upload_to=upload_foto_servidor, null=True, blank=True)
-    avatar = models.ImageField(upload_to=upload_avatar_servidor, null=True, blank=True)
+    foto = models.ImageField(upload_to=upload_foto_servidor, null=True, blank=True, max_length=250)
+    avatar = models.ImageField(upload_to=upload_avatar_servidor, null=True, blank=True, max_length=250)
     
     # CONTATOS
     email_funcional = models.EmailField(unique=True)

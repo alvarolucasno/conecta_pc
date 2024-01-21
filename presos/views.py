@@ -103,7 +103,7 @@ def cadastrar_preso(request):
             novo_preso.save()
             
             informacao = f"Individuo preso em virtude do(a) {novo_preso.razao_prisao} nº {novo_preso.numero_procedimento}"
-            #TODO:APAGAR O COMENTARIO salvar_bot_telegram.chamada_api(novo_preso.nome_completo, novo_preso.data_nascimento, novo_preso.mae, (request.POST.get(f'croppedImage{2}').split(';base64,')[1]), informacao)
+            salvar_bot_telegram.chamada_api(novo_preso.nome_completo, novo_preso.data_nascimento, novo_preso.mae, (request.POST.get(f'croppedImage{2}').split(';base64,')[1]), informacao)
             messages.success(request, 'Dados salvos com sucesso!')
             return redirect('listar_presos')
         
@@ -153,6 +153,7 @@ def editar_preso(request, preso_id):
 
             preso.save()
 
+            # Processamento de imagens
             for i in range(1, 4):
                 image_data = request.POST.get(f'croppedImage{i}')
                 if image_data:
@@ -161,11 +162,13 @@ def editar_preso(request, preso_id):
                     image = ContentFile(base64.b64decode(imgstr), name=f'temp.{ext}')
 
                     if i == 1:
-                        preso.perfil_esquerdo.save(f'{preso.nome_completo}_esquerdo.{ext}', image)
+                        preso.perfil_esquerdo = image
                     elif i == 2:
-                        preso.frontal.save(f'{preso.nome_completo}_frontal.{ext}', image)
+                        preso.frontal = image
                     elif i == 3:
-                        preso.perfil_direito.save(f'{preso.nome_completo}_direito.{ext}', image)
+                        preso.perfil_direito = image
+                  
+            preso.save()
 
             messages.success(request, 'Preso atualizado com sucesso!')
             return redirect('listar_presos')

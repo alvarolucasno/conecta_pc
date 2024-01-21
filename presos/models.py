@@ -72,7 +72,7 @@ class Preso(models.Model):
                 self.compress_image(field)
 
         # Criar o avatar a partir da imagem frontal
-        if self.frontal and not self.avatar:
+        if self.frontal:
             self.create_avatar()
 
         super().save(*args, **kwargs)
