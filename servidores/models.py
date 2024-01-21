@@ -83,6 +83,7 @@ class Servidor(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='usuario_modificado', on_delete=models.SET_NULL, null=True)
     updated_at = models.DateTimeField(auto_now=True)
+    ativo = models.BooleanField(default=True)
     
     class Meta:
         verbose_name = 'Servidor'
