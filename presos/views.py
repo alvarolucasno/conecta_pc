@@ -151,8 +151,6 @@ def editar_preso(request, preso_id):
             preso.observacao = request.POST.get('observacao', '').strip()
             preso.updated_by = request.user
 
-            preso.save()
-
             # Processamento de imagens
             for i in range(1, 4):
                 image_data = request.POST.get(f'croppedImage{i}')
