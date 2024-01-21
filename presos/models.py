@@ -70,35 +70,40 @@ class Preso(models.Model):
         # Verificar se as imagens foram atualizadas
         if self.pk:
             old_preso = Preso.objects.get(pk=self.pk)
-            
-            # Verificar e excluir imagem antiga do perfil esquerdo
+
+            # Excluir imagens antigas se foram atualizadas
             if old_preso.perfil_esquerdo != self.perfil_esquerdo and old_preso.perfil_esquerdo:
                 default_storage.delete(old_preso.perfil_esquerdo.path)
                 self.compress_image(self.perfil_esquerdo)
             
-            # Verificar e excluir imagem frontal antiga e o avatar associado
             if old_preso.frontal != self.frontal and old_preso.frontal:
+                default_storage.delete(old_preso.frontal.path)
                 if old_preso.avatar:
                     default_storage.delete(old_preso.avatar.path)
-                default_storage.delete(old_preso.frontal.path)
                 self.compress_image(self.frontal)
-                self.create_avatar()
             
-            # Verificar e excluir imagem antiga do perfil direito
             if old_preso.perfil_direito != self.perfil_direito and old_preso.perfil_direito:
                 default_storage.delete(old_preso.perfil_direito.path)
                 self.compress_image(self.perfil_direito)
+
         else:
             # Novo objeto, processar todas as imagens
             if self.perfil_esquerdo:
                 self.compress_image(self.perfil_esquerdo)
             if self.frontal:
                 self.compress_image(self.frontal)
-                self.create_avatar()
             if self.perfil_direito:
                 self.compress_image(self.perfil_direito)
 
+        # Salvar o objeto para garantir que todas as imagens sejam atualizadas
         super().save(*args, **kwargs)
+
+        # Sempre criar um novo avatar se houver uma imagem frontal
+        if self.frontal:
+            if self.avatar:
+                default_storage.delete(self.avatar.path)
+            self.create_avatar()
+            super().save(update_fields=['avatar'])
 
     def compress_image(self, image_field):
         # Abrir a imagem
