@@ -48,7 +48,7 @@
                   <th style="width: 25%; text-align: center; vertical-align: middle;">Cargo</th>
                   <th style="width: 11%; text-align: center; vertical-align: middle;">CPF</th>
                   <th style="width: 6%; text-align: center; vertical-align: middle;">Sexo</th>
-                  <th style="width: 5%; text-align: center; vertical-align: middle;">Ações</th>
+                  <th style="width: 10%; text-align: center; vertical-align: middle;">Ações</th>
                 </tr>
               </thead>
               <tbody>
@@ -59,15 +59,15 @@
                     <td style="text-align: center; vertical-align: middle;">{{ servidor.cargo_recente_nome }}</td>
                     <td style="text-align: center; vertical-align: middle;">{{ servidor.cpf|slice:":3" }}.{{ servidor.cpf|slice:"3:6" }}.{{ servidor.cpf|slice:"6:9" }}-{{ servidor.cpf|slice:"9:11" }}</td>
                     <td style="text-align: center; vertical-align: middle;">{{ servidor.sexo }}</td>
-                    <td style="text-align: center; vertical-align: middle;">
-                      <a href="#">
-                        <img src="insira um padrao de modelo" width="30" height="30" alt="Exibir">
+                    <td class="acoes" style="text-align: center; vertical-align: middle;">
+                      <a class="btn btn-primary btn-sm" href="#" title="Ver" style="font-size: 80%;">
+                        <i class="fas fa-eye"></i>
                       </a>
-                      <a href="#">
-                        <img src="insira um padrao de modelo" width="30" height="30" alt="Editar">
+                      <a class="btn btn-info btn-sm" href="#" title="Editar" style="font-size: 80%;">
+                        <i class="fas fa-pencil-alt"></i>
                       </a>
-                      <a href="#" onclick="return confirm('Tem certeza que deseja excluir este servidor?');">
-                        <img src="insira um padrao de modelo" width="30" height="30" alt="Excluir">
+                      <a class="btn btn-danger btn-sm" href="#" title="Excluir" style="font-size: 80%;">
+                        <i class="fas fa-trash"></i>
                       </a>
                     </td>
                   </tr>

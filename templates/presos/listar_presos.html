@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="{% static 'plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
   <link rel="stylesheet" href="{% static 'plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
   <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
+
 {% endblock %}
 
 {% block content %}
@@ -50,7 +51,7 @@
                   <th style="width: 6%; text-align: center; vertical-align: middle;">Sexo</th>
                   <th style="width: 6%; text-align: center; vertical-align: middle;">Unidade</th>
                   <th style="width: 6%; text-align: center; vertical-align: middle;">Data do registro</th>
-                  <th style="width: 5%; text-align: center; vertical-align: middle;">Editar</th>
+                  <th style="width: 10%; text-align: center; vertical-align: middle;">Ações</th>
                 </tr>
               </thead>
               <tbody>
@@ -63,11 +64,20 @@
                     <td style="text-align: center; vertical-align: middle;">{{ preso.get_sexo_display }}</td>
                     <td style="text-align: center; vertical-align: middle;">{{ preso.origem_fotos }}</td>
                     <td style="text-align: center; vertical-align: middle;">{{ preso.data_fotos|date:"d/m/Y" }}</td>
-                    <td style="text-align: center; vertical-align: middle;">
-                      <a href="{% url 'editar_preso' preso.id %}">
-                        <img src="{% static 'dist/img/editar_dado.png' %}" width="40" height="40" alt="Editar">
+                    <td class="acoes" style="text-align: center; vertical-align: middle;">
+                      <a class="btn btn-primary btn-sm" href="{% url 'exibir_preso' preso.id %}" title="Ver" style="font-size: 80%;">
+                        <i class="fas fa-eye"></i>
                       </a>
-                    </td>
+                      <a class="btn btn-info btn-sm" href="{% url 'editar_preso' preso.id %}" title="Editar" style="font-size: 80%;">
+                        <i class="fas fa-pencil-alt"></i>
+                      </a>
+                      <form id="deleteForm-{{ preso.id }}" method="post" action="{% url 'excluir_preso' preso.id %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="button" onclick="confirmDelete({{ preso.id }})" class="btn btn-danger btn-sm" title="Excluir" style="font-size: 80%;">
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </form>                                 
+                    </td>     
                   </tr>
                 {% empty %}
                   <tr>
@@ -134,7 +144,7 @@
       "searching": true,
       "ordering": true,
       "info": true,
-      "order": [[1, 'asc']],
+      "order": [[6, 'desc']],
       "lengthMenu": [[5, 10, 25, 50, 100], [5, 10, 25, 50, 100]], // Define as opções de quantidade de registros por página
       "language": {
         "sEmptyTable": "Nenhum registro encontrado",
@@ -162,4 +172,48 @@
     }).buttons().container().appendTo('#presos_wrapper .col-md-6:eq(0)');
   });
 </script>
+
+<script>
+
+  function confirmDelete(presoId) {
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: "btn btn-success",
+        cancelButton: "btn btn-danger"
+      },
+      buttonsStyling: false
+    });
+  
+    swalWithBootstrapButtons.fire({
+      title: "Tem certeza?",
+      text: "Você não poderá reverter isso!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sim, delete!",
+      cancelButtonText: "Não, cancele!",
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        document.getElementById('deleteForm-' + presoId).submit();
+      } else if (
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        swalWithBootstrapButtons.fire(
+          "Cancelado",
+          "Registro mantido!",
+          "error"
+        );
+      }
+    });
+  
+    setTimeout(() => {
+      const actionsContainer = document.querySelector('.swal2-actions');
+      if (actionsContainer) {
+        actionsContainer.style.display = 'flex';
+        actionsContainer.style.gap = '10px';
+      }
+    }, 0);
+  }
+  
+</script>  
 {% endblock %}

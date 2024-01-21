@@ -1,0 +1,111 @@
+{% extends 'partials/_base.html' %}
+
+{% load static %}
+
+{% block title %}Conecta PC | Presos{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'plugins/cropper/cropper.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="#">Serviços</a></li>
+          <li class="breadcrumb-item active">Presos</li>
+          <li class="breadcrumb-item active">Cadastrar</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body">
+              <div class="card card-primary">
+                <div class="card-header">
+                  <h3 class="card-title">Dados do preso {{ preso.nome_completo }} | Registro de {{ preso.data_fotos|date:'d/m/Y' }}</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 text-left">
+
+                            <div class="row">
+                                <div class="col"><strong>Nome:</strong> {{ preso.nome_completo }}</div>
+                                <div class="col"><strong>Alcunha:</strong> {{ preso.alcunha|default_if_none:"" }}</div>
+                              </div>
+                            
+                            <div class="row">
+                              <div class="col"><strong>Origem da Foto:</strong> {{ preso.origem_fotos }}</div>
+                              <div class="col"><strong>Data das Fotos:</strong> {{ preso.data_fotos|date:'d/m/Y' }}</div>
+                            </div>
+                            
+                            <div class="row">
+                              <div class="col"><strong>Sexo:</strong> {{ preso.sexo }}</div>
+                              <div class="col"><strong>DN:</strong> {{ preso.data_nascimento|date:'d/m/Y' }}</div>
+                            </div>
+                          
+                            <div class="row">
+                                <div class="col"><strong>Mãe:</strong> {{ preso.mae }}</div>
+                                <div class="col"><strong>Pai:</strong> {{ preso.pai }}</div>
+                            </div>
+
+                            <div class="row">
+                              <div class="col"><strong>RG:</strong> {{ preso.rg }}</div>
+                              <div class="col"><strong>UF do RG:</strong> {{ preso.uf_rg }}</div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col"><strong>CPF:</strong> {{ preso.cpf }}</div>
+                                <div class="col"><strong>CNH:</strong> {{ preso.cnh }}</div>
+                              </div>
+                            
+                              <div class="row">
+                                <div class="col"><strong>NIS:</strong> {{ preso.nis }}</div>
+                                <div class="col"><strong>SAP:</strong> {{ preso.sap }}</div>
+                              </div>
+
+                            <div class="row">
+                              <div class="col"><strong>Tipo de Prisão:</strong> {{ preso.razao_prisao }}</div>
+                              <div class="col"><strong>Nº:</strong> {{ preso.numero_procedimento }}</div>
+                            </div>
+                          
+                            <div><strong>Observação:</strong> {{ preso.observacao }}</div>
+                          </div>                          
+                  
+                          <div class="col-md-6 text-right">
+                            <img src="{{ preso.perfil_esquerdo.url }}" alt="Perfil esquerdo" style="width: 30%; margin-right: 0.5%; border: 1px solid #696969;">
+                            <img src="{{ preso.frontal.url }}" alt="Frontal" style="width: 30%; margin-right: 0.5%; border: 1px solid #696969;">
+                            <img src="{{ preso.perfil_direito.url }}" alt="Perfil direito" style="width: 30%; border: 1px solid #696969;">
+                          </div>                          
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+
+
+
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'plugins/cropper/jquery.min.js' %}" crossorigin="anonymous"></script>
+<script src="{% static 'plugins/cropper/bootstrap.bundle.min.js' %}" crossorigin="anonymous"></script>
+<script src="{% static 'plugins/cropper/cropper.js' %}"></script>
+
+{% endblock %}

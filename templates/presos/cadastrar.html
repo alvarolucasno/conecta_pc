@@ -65,12 +65,13 @@
                   </div> 
                     <div class="form-row">
                       <div class="form-group col-md-2">
-                        <label for="dataNascimento">Data das fotos:</label>
+                        <label for="data_fotos">Data das fotos:</label>
                         <input type="date" class="form-control" id="data_fotos" name="data_fotos" min="2023-01-01">
                       </div>
                       <div class="form-group col-md-2">
                         <label for="origem_fotos">Origem da Foto:</label>
                         <select class="form-control" id="origem_fotos" name="origem_fotos" required>
+                          <option value="" disabled selected></option>
                           <option>1ª DM</option>
                           <option>2ª DM</option>
                           <option>3ª DM</option>
@@ -78,31 +79,36 @@
                           <option>5ª DM</option>
                           <option>8ª DM</option>
                           <option>COPE</option>
-                        </select>
+                      </select>                      
                       </div>
                       <div class="form-group col-md-1">
                         <label for="sexo">Sexo:</label>
                         <select class="form-control" id="sexo" name="sexo" required>
-                          <option>M</option>
-                          <option>F</option>
-                        </select>
+                          <option value="" disabled selected></option>
+                          <option value="M">M</option>
+                          <option value="F">F</option>
+                      </select>                      
                       </div>
                       <div class="form-group col-md-5">
                         <label for="nome_completo">Nome Completo:</label>
                         <input type="text" class="form-control" id="nome_completo" name="nome_completo" required>
                       </div>
                       <div class="form-group col-md-2">
-                        <label for="data_nascimento">Data de Nascimento:</label>
-                        <input type="date" class="form-control" id="data_nascimento" name="data_nascimento" min="1900-01-01">
+                        <label for="alcunha">Alcunha:</label>
+                        <input type="text" class="form-control" id="alcunha" name="alcunha">
                       </div>
                     </div>
 
                     <div class="form-row">
-                      <div class="form-group col-md-4">
+                      <div class="form-group col-md-2">
+                        <label for="data_nascimento">Data de Nascimento:</label>
+                        <input type="date" class="form-control" id="data_nascimento" name="data_nascimento" min="1900-01-01" required>
+                      </div>
+                      <div class="form-group col-md-3">
                         <label for="mae">Mãe:</label>
                         <input type="text" class="form-control" id="mae" name="mae" required>
                       </div>
-                      <div class="form-group col-md-4">
+                      <div class="form-group col-md-3">
                         <label for="pai">Pai:</label>
                         <input type="text" class="form-control" id="pai" name="pai">
                       </div>
@@ -114,10 +120,11 @@
                       <div class="form-group col-md-2">
                         <label for="uf_rg">UF do RG:</label>
                         <select class="form-control" id="uf_rg" name="uf_rg">
-                            {% for uf in ufs %}
-                                <option value="{{ uf }}" {% if uf == "Sergipe" %}selected{% endif %}>{{ uf }}</option>
-                            {% endfor %}
-                        </select>
+                          <option value="" selected></option>
+                          {% for uf in ufs %}
+                              <option value="{{ uf }}">{{ uf }}</option>
+                          {% endfor %}
+                      </select>
                     </div>
                   </div>
 
@@ -149,7 +156,7 @@
                         </select>
                       </div>
                       <div class="form-group col-md-3">
-                        <label for="numero_procedimento">Número do procedimento ou mandado:</label>
+                        <label for="numero_procedimento">Nº do procedimento ou mandado:</label>
                         <input type="text" class="form-control" id="numero_procedimento" name="numero_procedimento" required>
                       </div>
                     </div>
@@ -322,7 +329,7 @@
       value = value.replace(/[^a-zA-Z\sáéíóúÁÉÍÓÚçÇãõÃÕ]/g, "");
       let palavras = value.split(" ");
       let palavrasFormatadas = [];
-      const palavrasMinusculas = ["de", "do", "da", "dos", "das"];
+      const palavrasMinusculas = ["de", "do", "da", "dos", "das", "e"];
 
       for (let palavra of palavras) {
         if (palavrasMinusculas.includes(palavra.toLowerCase())) {
@@ -345,6 +352,9 @@
 
     const paiInput = document.getElementById("pai");
     paiInput.addEventListener("input", formatarNome);
+
+    const alcunhaInput = document.getElementById("alcunha");
+    alcunhaInput.addEventListener("input", formatarNome);
   });
   
 </script>
@@ -367,6 +377,19 @@
     }
   });
 </script>
+
+<script>
+  window.onload = function() {
+      var today = new Date();
+      var dd = String(today.getDate()).padStart(2, '0');
+      var mm = String(today.getMonth() + 1).padStart(2, '0'); //Janeiro é 0!
+      var yyyy = today.getFullYear();
+
+      today = yyyy + '-' + mm + '-' + dd;
+      document.getElementById('data_fotos').value = today;
+  };
+</script>
+
 
 {% endblock %}
 

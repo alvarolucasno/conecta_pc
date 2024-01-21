@@ -29,6 +29,7 @@ class Preso(models.Model):
     data_fotos = models.DateField()
     origem_fotos = models.CharField(max_length=255)
     nome_completo = models.CharField(max_length=255)
+    alcunha = models.CharField(max_length=255, blank=True, null=True)
     data_nascimento = models.DateField()
     mae = models.CharField(max_length=255)
     pai = models.CharField(max_length=255, blank=True, null=True)
@@ -58,6 +59,8 @@ class Preso(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='presos_modificados', on_delete=models.SET_NULL, null=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
+    ativo = models.BooleanField(default=True)
 
     def __str__(self):
         return self.nome_completo
