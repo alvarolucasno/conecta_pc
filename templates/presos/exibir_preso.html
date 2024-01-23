@@ -82,10 +82,25 @@
                           </div>                          
                   
                           <div class="col-md-6 text-right">
-                            <img src="{{ preso.perfil_esquerdo.url }}" alt="Perfil esquerdo" style="width: 30%; margin-right: 0.5%; border: 1px solid #696969;">
-                            <img src="{{ preso.frontal.url }}" alt="Frontal" style="width: 30%; margin-right: 0.5%; border: 1px solid #696969;">
-                            <img src="{{ preso.perfil_direito.url }}" alt="Perfil direito" style="width: 30%; border: 1px solid #696969;">
-                          </div>                          
+                            {% if preso.perfil_esquerdo %}
+                                <img src="{{ preso.perfil_esquerdo.url }}" alt="Perfil esquerdo" style="width: 30%; margin-right: 0.5%; border: 1px solid #696969;">
+                            {% else %}
+                                <img src="{% static 'dist/img/direita.png' %}" alt="Perfil Esquerdo Padrão" style="width: 30%; margin-right: 0.5%; border: 1px solid #696969;">
+                            {% endif %}
+                        
+                            {% if preso.frontal %}
+                                <img src="{{ preso.frontal.url }}" alt="Frontal" style="width: 30%; margin-right: 0.5%; border: 1px solid #696969;">
+                            {% else %}
+                                <img src="{% static 'dist/img/frontal.png' %}" alt="Frontal Padrão" style="width: 30%; margin-right: 0.5%; border: 1px solid #696969;">
+                            {% endif %}
+                        
+                            {% if preso.perfil_direito %}
+                                <img src="{{ preso.perfil_direito.url }}" alt="Perfil direito" style="width: 30%; border: 1px solid #696969;">
+                            {% else %}
+                                <img src="{% static 'dist/img/esquerda.png' %}" alt="Perfil Direito Padrão" style="width: 30%; border: 1px solid #696969;">
+                            {% endif %}
+                        </div>
+                                                 
                   </div>
                 </div>
               </div>

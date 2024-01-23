@@ -18,6 +18,8 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
   {% block extra_head %}{% endblock %}
 </head>
 <body class="hold-transition sidebar-mini">
@@ -45,30 +47,35 @@
 <!-- SweetAlert2 -->
 <script src="{% static 'plugins/sweetalert2/sweetalert2.min.js' %}"></script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
 <script>
   $(function() {
     {% if messages %}
-      var Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 8000,
-        timerProgressBar: true,
-        onOpen: (toast) => {
-          toast.addEventListener('mouseenter', Swal.stopTimer)
-          toast.addEventListener('mouseleave', Swal.resumeTimer)
-        }
-      });
-
       {% for message in messages %}
-        Toast.fire({
-          icon: "{{ message.tags }}",
-          title: "{{ message }}"
-        })
+        toastr.options = {
+          "closeButton": false,
+          "debug": false,
+          "newestOnTop": false,
+          "progressBar": true,
+          "positionClass": "toast-top-right",
+          "preventDuplicates": false,
+          "onclick": null,
+          "showDuration": "300",
+          "hideDuration": "1000",
+          "timeOut": "8000",
+          "extendedTimeOut": "1000",
+          "showEasing": "swing",
+          "hideEasing": "linear",
+          "showMethod": "fadeIn",
+          "hideMethod": "fadeOut"
+        }
+        toastr["{{ message.tags }}"]("{{ message }}")
       {% endfor %}
     {% endif %}
   });
 </script>
+
 {% block extra_scripts %}{% endblock %}
 </body>
 </html>
