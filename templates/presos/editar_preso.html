@@ -23,6 +23,7 @@
       </div>
     </div>
   </div>
+</div>
 
 <section class="content">
   <div class="container-fluid">
@@ -38,7 +39,6 @@
                 <form method="post" enctype="multipart/form-data">
                   {% csrf_token %}
                   <div class="form-row">
-                    
                     <div class="form-group col-md-4 text-center">
                       <div class="drop-area" id="dropArea1" style="border: 2px dashed #ccc; border-radius: 10px; padding: 10px;">
                         {% if preso.perfil_esquerdo %}
@@ -50,7 +50,6 @@
                         <input type="file" id="inputImage1" accept="image/*" style="display: none;">
                       </div>
                     </div>
-                    
                     <div class="form-group col-md-4 text-center">
                       <div class="drop-area" id="dropArea2" style="border: 2px dashed #ccc; border-radius: 10px; padding: 10px;">
                         {% if preso.frontal %}
@@ -62,7 +61,6 @@
                         <input type="file" id="inputImage2" accept="image/*" style="display: none;">
                       </div>
                     </div>
-                    
                     <div class="form-group col-md-4 text-center">
                       <div class="drop-area" id="dropArea3" style="border: 2px dashed #ccc; border-radius: 10px; padding: 10px;">
                         {% if preso.perfil_direito %}
@@ -73,118 +71,111 @@
                         <div class="d-flex justify-content-center align-items-center" style="height: 50px;">Perfil direito</div>
                         <input type="file" id="inputImage3" accept="image/*" style="display: none;">
                       </div>
-                    </div>                    
-                    
-                      <input type="hidden" name="croppedImage1" id="croppedImage1">
-                      <input type="hidden" name="croppedImage2" id="croppedImage2">
-                      <input type="hidden" name="croppedImage3" id="croppedImage3">
-                    </div>                                        
-                  </div> 
-                    <div class="form-row">
-                      <div class="form-group col-md-2">
-                        <label for="data_fotos">Data das fotos:</label>
-                        <input type="date" class="form-control" id="data_fotos" name="data_fotos" value="{{ preso.data_fotos|date:'Y-m-d' }}" min="2023-01-01">
-                      </div>
-                      <div class="form-group col-md-2">
-                        <label for="origem_fotos">Origem da Foto:</label>
-                        <select class="form-control" id="origem_fotos" name="origem_fotos" required>
-                          <option value="1ª DM" {% if preso.origem_fotos == "1ª DM" %}selected{% endif %}>1ª DM</option>
-                          <option value="2ª DM" {% if preso.origem_fotos == "2ª DM" %}selected{% endif %}>2ª DM</option>
-                          <option value="3ª DM" {% if preso.origem_fotos == "3ª DM" %}selected{% endif %}>3ª DM</option>
-                          <option value="4ª DM" {% if preso.origem_fotos == "4ª DM" %}selected{% endif %}>4ª DM</option>
-                          <option value="5ª DM" {% if preso.origem_fotos == "5ª DM" %}selected{% endif %}>5ª DM</option>
-                          <option value="8ª DM" {% if preso.origem_fotos == "8ª DM" %}selected{% endif %}>8ª DM</option>
-                          <option value="COPE" {% if preso.origem_fotos == "COPE" %}selected{% endif %}>COPE</option>
-                        </select>                        
-                      </div>
-                      <div class="form-group col-md-1">
-                        <label for="sexo">Sexo:</label>
-                        <select class="form-control" id="sexo" name="sexo" required>
-                          <option value="M" {% if preso.sexo == "M" %}selected{% endif %}>M</option>
-                          <option value="F" {% if preso.sexo == "F" %}selected{% endif %}>F</option>
-                        </select>
-                      </div>
-                      <div class="form-group col-md-5">
-                        <label for="nome_completo">Nome Completo:</label>
-                        <input type="text" class="form-control" id="nome_completo" name="nome_completo" value="{{ preso.nome_completo }}" required>
-                      </div>
-                      <div class="form-group col-md-2">
-                        <label for="alcunha">Alcunha:</label>
-                        <input type="text" class="form-control" id="alcunha" name="alcunha" value="{{ preso.alcunha|default_if_none:"" }}">
-                      </div>                    
                     </div>
-
-                    <div class="form-row">
-                      <div class="form-group col-md-2">
-                        <label for="data_nascimento">Data de Nascimento:</label>
-                        <input type="date" class="form-control" id="data_nascimento" name="data_nascimento" value="{{ preso.data_nascimento|date:'Y-m-d' }}" min="1900-01-01">
-                      </div>
-                      <div class="form-group col-md-3">
-                        <label for="mae">Mãe:</label>
-                        <input type="text" class="form-control" id="mae" name="mae" value="{{ preso.mae }}" required>
-                      </div>
-                      <div class="form-group col-md-3">
-                        <label for="pai">Pai:</label>
-                        <input type="text" class="form-control" id="pai" name="pai" value="{{ preso.pai }}">
-                      </div>
-                      <div class="form-group col-md-2">
-                        <label for="rg">RG:</label>
-                        <input type="text" class="form-control" id="rg" name="rg" pattern="\d*" inputmode="numeric" title="Por favor, insira apenas números." value="{{ preso.rg }}">
-                      </div>
-                      <div class="form-group col-md-2">
-                        <label for="uf_rg">UF do RG:</label>
-                        <select class="form-control" id="uf_rg" name="uf_rg">
-                          {% for uf in ufs %}
-                              <option value="{{ uf }}" {% if preso.uf_rg == uf %}selected{% endif %}>{{ uf }}</option>
-                          {% endfor %}
-                      </select>                      
+                    <input type="hidden" name="croppedImage1" id="croppedImage1">
+                    <input type="hidden" name="croppedImage2" id="croppedImage2">
+                    <input type="hidden" name="croppedImage3" id="croppedImage3">
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col-md-2">
+                      <label for="data_fotos">Data das fotos:</label>
+                      <input type="date" class="form-control" id="data_fotos" name="data_fotos" value="{{ preso.data_fotos|date:'Y-m-d' }}" min="2023-01-01">
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="origem_fotos">Origem da Foto:</label>
+                      <select class="form-control" id="origem_fotos" name="origem_fotos" required>
+                        <option value="1ª DM" {% if preso.origem_fotos == "1ª DM" %}selected{% endif %}>1ª DM</option>
+                        <option value="2ª DM" {% if preso.origem_fotos == "2ª DM" %}selected{% endif %}>2ª DM</option>
+                        <option value="3ª DM" {% if preso.origem_fotos == "3ª DM" %}selected{% endif %}>3ª DM</option>
+                        <option value="4ª DM" {% if preso.origem_fotos == "4ª DM" %}selected{% endif %}>4ª DM</option>
+                        <option value="5ª DM" {% if preso.origem_fotos == "5ª DM" %}selected{% endif %}>5ª DM</option>
+                        <option value="8ª DM" {% if preso.origem_fotos == "8ª DM" %}selected{% endif %}>8ª DM</option>
+                        <option value="COPE" {% if preso.origem_fotos == "COPE" %}selected{% endif %}>COPE</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-1">
+                      <label for="sexo">Sexo:</label>
+                      <select class="form-control" id="sexo" name="sexo" required>
+                        <option value="M" {% if preso.sexo == "M" %}selected{% endif %}>M</option>
+                        <option value="F" {% if preso.sexo == "F" %}selected{% endif %}>F</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-5">
+                      <label for="nome_completo">Nome Completo:</label>
+                      <input type="text" class="form-control" id="nome_completo" name="nome_completo" value="{{ preso.nome_completo }}" required>
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="alcunha">Alcunha:</label>
+                      <input type="text" class="form-control" id="alcunha" name="alcunha" value="{{ preso.alcunha|default_if_none:"" }}">
                     </div>
                   </div>
-
-                    <div class="form-row">
-                      <div class="form-group col-md-2">
-                        <label for="cpf">CPF:</label>
-                        <input type="text" class="form-control" id="cpf" name="cpf" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}" title="Por favor, insira o CPF completo..." value="{{ preso.cpf|slice:':3' }}.{{ preso.cpf|slice:'3:6' }}.{{ preso.cpf|slice:'6:9' }}-{{ preso.cpf|slice:'9:11' }}">
-                      </div>
-
-                      <div class="form-group col-md-2">
-                        <label for="cnh">CNH:</label>
-                        <input type="text" class="form-control" id="cnh" name="cnh" pattern="\d*" inputmode="numeric" title="Por favor, insira apenas números." value="{{ preso.cnh }}">
-                      </div>
-                      <div class="form-group col-md-2">
-                        <label for="nis">NIS:</label>
-                        <input type="text" class="form-control" id="nis" name="nis" pattern="\d*" inputmode="numeric" title="Por favor, insira apenas números." value="{{ preso.nis }}">
-                      </div>
-                      <div class="form-group col-md-1">
-                        <label for="sap">SAP:</label>
-                        <input type="text" class="form-control" id="sap" name="sap" pattern="\d*" inputmode="numeric" title="Por favor, insira apenas números." value="{{ preso.sap }}">
-                      </div>
-
-                      <div class="form-group col-md-2">
-                        <label for="razao_prisao">Tipo de prisão:</label>
-                        <select class="form-control" id="razao_prisao" name="razao_prisao" required>
-                          <option value="APF" {% if preso.razao_prisao == "APF" %}selected{% endif %}>APF</option>
-                          <option value="Mandado de Prisão" {% if preso.razao_prisao == "Mandado de Prisão" %}selected{% endif %}>Mandado de Prisão</option>
-                          <option value="Prisão Cível" {% if preso.razao_prisao == "Prisão Cível" %}selected{% endif %}>Prisão Cível</option>
-                        </select>                        
-                      </div>
-                      <div class="form-group col-md-3">
-                        <label for="numero_procedimento">Nº do procedimento ou mandado:</label>
-                        <input type="text" class="form-control" id="numero_procedimento" name="numero_procedimento" value="{{ preso.numero_procedimento }}"required>
-                      </div>
+                  <div class="form-row">
+                    <div class="form-group col-md-2">
+                      <label for="data_nascimento">Data de Nascimento:</label>
+                      <input type="date" class="form-control" id="data_nascimento" name="data_nascimento" value="{{ preso.data_nascimento|date:'Y-m-d' }}" min="1900-01-01">
                     </div>
-
-                    <div class="form-row">
-                      <div class="form-group col-md-9">
-                        <label for="observacao">Observação:</label>
-                        <input type="text" class="form-control" id="observacao" name="observacao" value="{{ preso.observacao }}">
-                      </div>
-                      <div class="form-group col-md-3 d-flex align-items-end justify-content-between">
-                        <button type="submit" class="btn btn-primary" style="width: 48%;">Enviar</button>
-                        <a href="/presos" class="btn btn-danger" style="width: 48%;">Cancelar</a>
-                      </div>
+                    <div class="form-group col-md-3">
+                      <label for="mae">Mãe:</label>
+                      <input type="text" class="form-control" id="mae" name="mae" value="{{ preso.mae }}" required>
                     </div>
-                  </form>
+                    <div class="form-group col-md-3">
+                      <label for="pai">Pai:</label>
+                      <input type="text" class="form-control" id="pai" name="pai" value="{{ preso.pai }}">
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="rg">RG:</label>
+                      <input type="text" class="form-control" id="rg" name="rg" pattern="\d*" inputmode="numeric" title="Por favor, insira apenas números." value="{{ preso.rg }}">
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="uf_rg">UF do RG:</label>
+                      <select class="form-control" id="uf_rg" name="uf_rg">
+                        {% for uf in ufs %}
+                        <option value="{{ uf }}" {% if preso.uf_rg == uf %}selected{% endif %}>{{ uf }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col-md-2">
+                      <label for="cpf">CPF:</label>
+                      <input type="text" class="form-control" id="cpf" name="cpf" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}" title="Por favor, insira o CPF completo..." value="{{ preso.cpf|slice:':3' }}.{{ preso.cpf|slice:'3:6' }}.{{ preso.cpf|slice:'6:9' }}-{{ preso.cpf|slice:'9:11' }}">
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="cnh">CNH:</label>
+                      <input type="text" class="form-control" id="cnh" name="cnh" pattern="\d*" inputmode="numeric" title="Por favor, insira apenas números." value="{{ preso.cnh }}">
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="nis">NIS:</label>
+                      <input type="text" class="form-control" id="nis" name="nis" pattern="\d*" inputmode="numeric" title="Por favor, insira apenas números." value="{{ preso.nis }}">
+                    </div>
+                    <div class="form-group col-md-1">
+                      <label for="sap">SAP:</label>
+                      <input type="text" class="form-control" id="sap" name="sap" pattern="\d*" inputmode="numeric" title="Por favor, insira apenas números." value="{{ preso.sap }}">
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="razao_prisao">Tipo de prisão:</label>
+                      <select class="form-control" id="razao_prisao" name="razao_prisao" required>
+                        <option value="APF" {% if preso.razao_prisao == "APF" %}selected{% endif %}>APF</option>
+                        <option value="Mandado de Prisão" {% if preso.razao_prisao == "Mandado de Prisão" %}selected{% endif %}>Mandado de Prisão</option>
+                        <option value="Prisão Cível" {% if preso.razao_prisao == "Prisão Cível" %}selected{% endif %}>Prisão Cível</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-3">
+                      <label for="numero_procedimento">Nº do procedimento ou mandado:</label>
+                      <input type="text" class="form-control" id="numero_procedimento" name="numero_procedimento" value="{{ preso.numero_procedimento }}" required>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col-md-9">
+                      <label for="observacao">Observação:</label>
+                      <input type="text" class="form-control" id="observacao" name="observacao" value="{{ preso.observacao }}">
+                    </div>
+                    <div class="form-group col-md-3 d-flex align-items-end justify-content-between">
+                      <button type="submit" class="btn btn-primary" style="width: 48%;">Enviar</button>
+                      <a href="/presos" class="btn btn-danger" style="width: 48%;">Cancelar</a>
+                    </div>
+                  </div>
+                </form>
               </div>
             </div>
           </div>
@@ -193,7 +184,7 @@
     </div>
   </div>
 </section>
-</div>
+
 
 <div class="modal fade" id="cropperModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog" role="document" style="max-height: 90%;">
