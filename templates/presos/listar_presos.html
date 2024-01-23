@@ -57,7 +57,7 @@
               <tbody>
                 {% for preso in presos %}
                   <tr>
-                    <td>
+                    <td style="display: flex; justify-content: center; align-items: center; text-align:center; vertical-align:middle;">
                       {% if preso and preso.avatar and preso.avatar.url %}
                           <img src="{{ preso.avatar.url }}" alt="Foto" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
                       {% else %}

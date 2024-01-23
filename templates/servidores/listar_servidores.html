@@ -54,7 +54,9 @@
               <tbody>
                 {% for servidor in servidores %}
                   <tr>
-                    <td><img src="{{ servidor.avatar.url }}" alt="Foto" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;"></td>
+                    <td style="display: flex; justify-content: center; align-items: center; text-align:center; vertical-align:middle;">
+                      <img src="{{ servidor.avatar.url }}" alt="Foto" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
+                    </td>
                     <td style="text-align: center; vertical-align: middle;">{{ servidor.nome_completo }}</td>
                     <td style="text-align: center; vertical-align: middle;">{{ servidor.cargo_recente_nome }}</td>
                     <td style="text-align: center; vertical-align: middle;">{{ servidor.cpf|slice:":3" }}.{{ servidor.cpf|slice:"3:6" }}.{{ servidor.cpf|slice:"6:9" }}-{{ servidor.cpf|slice:"9:11" }}</td>
