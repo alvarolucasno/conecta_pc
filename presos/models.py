@@ -107,19 +107,28 @@ class Preso(models.Model):
 
     def compress_image(self, image_field):
         # Abrir a imagem
-        image = Image.open(image_field)
+        with Image.open(image_field) as image:
 
-        # Converter imagem RGBA para RGB (se necessário)
-        if image.mode == 'RGBA':
-            image = image.convert('RGB')
+            # Converter imagem RGBA para RGB (se necessário)
+            if image.mode == 'RGBA':
+                image = image.convert('RGB')
 
-        # Comprimir a imagem (ajustar os parâmetros conforme necessário)
-        image_io = BytesIO()
-        image.save(image_io, format='JPEG', quality=70)  # Ajustar qualidade aqui
-        
+            # Calcular o novo tamanho mantendo o aspect ratio
+            max_resolution = 2000
+            ratio = min(max_resolution / image.width, max_resolution / image.height)
+
+            # Checar se é necessário redimensionar
+            if ratio < 1:  # Redimensionar apenas se a imagem for maior que a resolução máxima
+                size = (int(image.width * ratio), int(image.height * ratio))
+                image = image.resize(size, Image.Resampling.LANCZOS)
+
+            # Comprimir a imagem
+            image_io = BytesIO()
+            image.save(image_io, format='JPEG', quality=70)  # Ajustar a qualidade conforme necessário
+            image_io.seek(0)
+
         # Salvar a imagem comprimida
         image_field.save(image_field.name, ContentFile(image_io.getvalue()), save=False)
-
 
     def create_avatar(self):
         if self.frontal:
@@ -127,7 +136,7 @@ class Preso(models.Model):
             avatar_img = Image.open(self.frontal.path)
 
             # Calcular o novo tamanho mantendo o aspect ratio
-            max_size = 100
+            max_size = 200
             ratio = min(max_size / avatar_img.width, max_size / avatar_img.height)
             size = (int(avatar_img.width * ratio), int(avatar_img.height * ratio))
             avatar_img = avatar_img.resize(size, Image.Resampling.LANCZOS)
