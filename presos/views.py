@@ -82,10 +82,9 @@ def cadastrar_preso(request):
                 observacao=request.POST.get('observacao', '').strip(),
                 created_by=request.user
             )
-            
-            novo_preso.save()
 
             # Processamento de imagens
+            imagens_processadas = False
             for i in range(1, 4):
                 image_data = request.POST.get(f'croppedImage{i}')
                 if image_data:
@@ -99,11 +98,14 @@ def cadastrar_preso(request):
                         novo_preso.frontal = image
                     elif i == 3:
                         novo_preso.perfil_direito = image
-                  
-            novo_preso.save()
+                    
+                    imagens_processadas = True
+
+            if imagens_processadas:
+                novo_preso.save()
             
             informacao = f"Individuo preso em virtude do(a) {novo_preso.razao_prisao} nº {novo_preso.numero_procedimento}"
-            #salvar_bot_telegram.chamada_api(novo_preso.nome_completo, novo_preso.data_nascimento, novo_preso.mae, (request.POST.get(f'croppedImage{2}').split(';base64,')[1]), informacao)
+            salvar_bot_telegram.chamada_api(novo_preso.nome_completo, novo_preso.data_nascimento, novo_preso.mae, (request.POST.get(f'croppedImage{2}').split(';base64,')[1]), informacao)
             messages.success(request, 'Dados salvos com sucesso!')
             return redirect('listar_presos')
         
