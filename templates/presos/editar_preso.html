@@ -129,6 +129,7 @@
                     <div class="form-group col-md-2">
                       <label for="uf_rg">UF do RG:</label>
                       <select class="form-control" id="uf_rg" name="uf_rg">
+                        <option value="" selected></option>
                         {% for uf in ufs %}
                         <option value="{{ uf }}" {% if preso.uf_rg == uf %}selected{% endif %}>{{ uf }}</option>
                         {% endfor %}
