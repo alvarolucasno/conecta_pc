@@ -78,9 +78,20 @@
                               <div class="col"><strong>Nº:</strong> {{ preso.numero_procedimento }}</div>
                             </div>
                           
-                            <div><strong>Observação:</strong> {{ preso.observacao }}</div>
-                          </div>                          
-                  
+                            <div>
+                              <strong>Observação:</strong> {{ preso.observacao }}</div>
+                            </div>
+
+                            <div>
+                              <strong>Cadastrador:</strong> {{ cadastrador.nome_completo | default_if_none:"" }}</div>
+                            </div>          
+                            
+                            {% if editor %}
+                            <div>
+                              <strong>Editor:</strong> {{ editor.nome_completo }}
+                            </div>
+                            {% endif %}
+                            
                           <div class="col-md-6 text-right">
                             {% if preso.perfil_esquerdo %}
                                 <img src="{{ preso.perfil_esquerdo.url }}" alt="Perfil esquerdo" style="width: 30%; margin-right: 0.5%; border: 1px solid #696969;">

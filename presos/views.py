@@ -17,6 +17,7 @@ from django.core.files.base import ContentFile
 import json
 from .models import Preso
 from servidores.models import Cargo, Servidor
+from users.models import CustomUser
 
 @login_required(login_url='/login/')
 def listar_presos(request):
@@ -197,12 +198,24 @@ def exibir_preso(request, preso_id):
     
     preso = get_object_or_404(Preso, id=preso_id)
     
+    try:
+        cadastrador = CustomUser.objects.get(id=preso.created_by_id)
+    except CustomUser.DoesNotExist:
+        cadastrador = None
+
+    try:
+        editor = CustomUser.objects.get(id=preso.updated_by_id)
+    except CustomUser.DoesNotExist:
+        editor = None
+    
     return render(request, 'presos/exibir_preso.html', {
         'user_name': user_name,
         'ufs': ufs_unicos,
         'preso': preso,
         'cargo': cargo.cargo, 
-        'foto': foto
+        'foto': foto,
+        'cadastrador': cadastrador,
+        'editor': editor
     })
 
 @login_required(login_url='/login/')
