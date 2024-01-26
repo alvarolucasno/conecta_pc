@@ -57,13 +57,13 @@
               <tbody>
                 {% for preso in presos %}
                   <tr>
-                    <td style="display: flex; justify-content: center; align-items: center; text-align:center; vertical-align:middle;">
+                    <td data-order="{{ preso.id }}" style="display: flex; justify-content: center; align-items: center; text-align:center; vertical-align:middle;">
                       {% if preso and preso.avatar and preso.avatar.url %}
                           <img src="{{ preso.avatar.url }}" alt="Foto" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
                       {% else %}
                           <img src="https://t4.ftcdn.net/jpg/01/18/03/35/240_F_118033506_uMrhnrjBWBxVE9sYGTgBht8S5liVnIeY.jpg" alt="Foto Padrão" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
                       {% endif %}
-                    </td>                                 
+                    </td>                                                  
                     <td style="text-align: center; vertical-align: middle;">{{ preso.nome_completo }}</td>
                     <td style="text-align: center; vertical-align: middle;">{{ preso.mae }}</td>
                     <td style="text-align: center; vertical-align: middle;">{{ preso.cpf|slice:":3" }}.{{ preso.cpf|slice:"3:6" }}.{{ preso.cpf|slice:"6:9" }}-{{ preso.cpf|slice:"9:11" }}</td>
@@ -150,7 +150,7 @@
       "searching": true,
       "ordering": true,
       "info": true,
-      "order": [[6, 'desc']],
+      "order": [[0, 'desc']],
       "lengthMenu": [[5, 10, 25, 50, 100], [5, 10, 25, 50, 100]], // Define as opções de quantidade de registros por página
       "language": {
         "sEmptyTable": "Nenhum registro encontrado",

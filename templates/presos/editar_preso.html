@@ -44,7 +44,7 @@
                         {% if preso.perfil_esquerdo %}
                           <img id="uploadedImage1" src="{{ preso.perfil_esquerdo.url }}" alt="Perfil Esquerdo" style="max-width: 300px; max-height: 400px;" draggable="true">
                         {% else %}
-                          <img id="uploadedImage1" src="{% static 'dist/img/direita.png' %}" alt="Perfil Esquerdo Padrão" style="max-width: 300px; max-height: 400px;" draggable="true">
+                          <img id="uploadedImage1" src="{% static 'dist/img/esquerda.png' %}" alt="Perfil Esquerdo Padrão" style="max-width: 300px; max-height: 400px;" draggable="true">
                         {% endif %}
                         <div class="d-flex justify-content-center align-items-center" style="height: 50px;">Perfil esquerdo</div>
                         <input type="file" id="inputImage1" accept="image/*" style="display: none;">
@@ -66,7 +66,7 @@
                         {% if preso.perfil_direito %}
                           <img id="uploadedImage3" src="{{ preso.perfil_direito.url }}" alt="Perfil Direito" style="max-width: 300px; max-height: 400px;" draggable="true">
                         {% else %}
-                          <img id="uploadedImage3" src="{% static 'dist/img/esquerda.png' %}" alt="Perfil Direito Padrão" style="max-width: 300px; max-height: 400px;" draggable="true">
+                          <img id="uploadedImage3" src="{% static 'dist/img/direita.png' %}" alt="Perfil Direito Padrão" style="max-width: 300px; max-height: 400px;" draggable="true">
                         {% endif %}
                         <div class="d-flex justify-content-center align-items-center" style="height: 50px;">Perfil direito</div>
                         <input type="file" id="inputImage3" accept="image/*" style="display: none;">
