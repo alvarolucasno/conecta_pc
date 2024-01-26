@@ -147,8 +147,9 @@
                     </div>
                     <div class="form-group col-md-2">
                       <label for="nis">NIS:</label>
-                      <input type="text" class="form-control" id="nis" name="nis" pattern="\d*" inputmode="numeric" title="Por favor, insira apenas números." value="{{ preso.nis }}">
-                    </div>
+                      <a href="#" id="linkConsulta" target="_blank">Consultar</a>
+                      <input type="text" class="form-control" id="nis" name="nis" pattern="\d*" inputmode="numeric" title="Por favor, insira apenas números.">
+                    </div>        
                     <div class="form-group col-md-1">
                       <label for="sap">SAP:</label>
                       <input type="text" class="form-control" id="sap" name="sap" pattern="\d*" inputmode="numeric" title="Por favor, insira apenas números." value="{{ preso.sap }}">
@@ -395,6 +396,34 @@
   };
 </script>
 
+<script type="text/javascript">
+  function atualizarLink() {
+      var cpfElement = document.getElementById('cpf');
+      var nomeCompletoElement = document.getElementById('nome_completo');
+
+      var cpf = cpfElement ? cpfElement.value.replace(/\D/g, '') : ''; // Remove pontos e traço
+      var nomeCompleto = nomeCompletoElement ? nomeCompletoElement.value : '';
+      var valorParaBusca = cpf || nomeCompleto; // Usa o valor do CPF, e se estiver em branco, usa o Nome Completo
+
+      if (valorParaBusca) {
+          var link = document.getElementById('linkConsulta');
+          link.href = "https://portaldatransparencia.gov.br/busca?termo=" + encodeURIComponent(valorParaBusca);
+      }
+  }
+
+  // Espera a página carregar completamente antes de chamar atualizarLink
+  window.addEventListener('load', atualizarLink);
+
+  // Atualiza o link quando os campos mudam
+  document.addEventListener('DOMContentLoaded', function() {
+      if (document.getElementById('cpf')) {
+          document.getElementById('cpf').addEventListener('change', atualizarLink);
+      }
+      if (document.getElementById('nome_completo')) {
+          document.getElementById('nome_completo').addEventListener('change', atualizarLink);
+      }
+  });
+</script>
 
 {% endblock %}
 
