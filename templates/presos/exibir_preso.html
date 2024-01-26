@@ -35,83 +35,96 @@
                   <h3 class="card-title">Dados do preso {{ preso.nome_completo }} | Registro de {{ preso.data_fotos|date:'d/m/Y' }}</h3>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6 text-left">
-
-                            <div class="row">
-                                <div class="col"><strong>Nome:</strong> {{ preso.nome_completo }}</div>
-                                <div class="col"><strong>Alcunha:</strong> {{ preso.alcunha|default_if_none:"" }}</div>
-                              </div>
-                            
-                            <div class="row">
-                              <div class="col"><strong>Origem da Foto:</strong> {{ preso.origem_fotos }}</div>
-                              <div class="col"><strong>Data das Fotos:</strong> {{ preso.data_fotos|date:'d/m/Y' }}</div>
-                            </div>
-                            
-                            <div class="row">
-                              <div class="col"><strong>Sexo:</strong> {{ preso.sexo }}</div>
-                              <div class="col"><strong>DN:</strong> {{ preso.data_nascimento|date:'d/m/Y' }}</div>
-                            </div>
-                          
-                            <div class="row">
-                                <div class="col"><strong>Mãe:</strong> {{ preso.mae }}</div>
-                                <div class="col"><strong>Pai:</strong> {{ preso.pai }}</div>
-                            </div>
-
-                            <div class="row">
-                              <div class="col"><strong>RG:</strong> {{ preso.rg }}</div>
-                              <div class="col"><strong>UF do RG:</strong> {{ preso.uf_rg }}</div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col"><strong>CPF:</strong> {{ preso.cpf }}</div>
-                                <div class="col"><strong>CNH:</strong> {{ preso.cnh }}</div>
-                              </div>
-                            
-                              <div class="row">
-                                <div class="col"><strong>NIS:</strong> {{ preso.nis }}</div>
-                                <div class="col"><strong>SAP:</strong> {{ preso.sap }}</div>
-                              </div>
-
-                            <div class="row">
-                              <div class="col"><strong>Tipo de Prisão:</strong> {{ preso.razao_prisao }}</div>
-                              <div class="col"><strong>Nº:</strong> {{ preso.numero_procedimento }}</div>
-                            </div>
-                          
-                            <div>
-                              <strong>Observação:</strong> {{ preso.observacao }}</div>
-                            </div>
-
-                            <div>
-                              <strong>Cadastrador:</strong> {{ cadastrador.nome_completo | default_if_none:"" }}</div>
-                            </div>          
-                            
-                            {% if editor %}
-                            <div>
-                              <strong>Editor:</strong> {{ editor.nome_completo }}
-                            </div>
-                            {% endif %}
-                            
-                          <div class="col-md-6 text-right">
-                            {% if preso.perfil_esquerdo %}
-                                <img src="{{ preso.perfil_esquerdo.url }}" alt="Perfil esquerdo" style="width: 30%; margin-right: 0.5%; border: 1px solid #696969;">
-                            {% else %}
-                                <img src="{% static 'dist/img/esquerda.png' %}" alt="Perfil Esquerdo Padrão" style="width: 30%; margin-right: 0.5%; border: 1px solid #696969;">
-                            {% endif %}
-                        
-                            {% if preso.frontal %}
-                                <img src="{{ preso.frontal.url }}" alt="Frontal" style="width: 30%; margin-right: 0.5%; border: 1px solid #696969;">
-                            {% else %}
-                                <img src="{% static 'dist/img/frontal.png' %}" alt="Frontal Padrão" style="width: 30%; margin-right: 0.5%; border: 1px solid #696969;">
-                            {% endif %}
-                        
-                            {% if preso.perfil_direito %}
-                                <img src="{{ preso.perfil_direito.url }}" alt="Perfil direito" style="width: 30%; border: 1px solid #696969;">
-                            {% else %}
-                                <img src="{% static 'dist/img/direita.png' %}" alt="Perfil Direito Padrão" style="width: 30%; border: 1px solid #696969;">
-                            {% endif %}
+                  <div class="row">
+                    <!-- Coluna da Esquerda -->
+                    <div class="col-md-6 text-left">
+                      <!-- Nome e Alcunha -->
+                      <div class="row">
+                        <div class="col"><strong>Nome:</strong> {{ preso.nome_completo }}</div>
+                        <div class="col"><strong>Alcunha:</strong> {{ preso.alcunha|default_if_none:"" }}</div>
+                      </div>
+  
+                      <!-- Origem e Data das Fotos -->
+                      <div class="row">
+                        <div class="col"><strong>Origem da Foto:</strong> {{ preso.origem_fotos }}</div>
+                        <div class="col"><strong>Data das Fotos:</strong> {{ preso.data_fotos|date:'d/m/Y' }}</div>
+                      </div>
+  
+                      <!-- Sexo e Data de Nascimento -->
+                      <div class="row">
+                        <div class="col"><strong>Sexo:</strong> {{ preso.sexo }}</div>
+                        <div class="col"><strong>DN:</strong> {{ preso.data_nascimento|date:'d/m/Y' }}</div>
+                      </div>
+  
+                      <!-- Mãe e Pai -->
+                      <div class="row">
+                        <div class="col"><strong>Mãe:</strong> {{ preso.mae }}</div>
+                        <div class="col"><strong>Pai:</strong> {{ preso.pai }}</div>
+                      </div>
+  
+                      <!-- RG e UF do RG -->
+                      <div class="row">
+                        <div class="col"><strong>RG:</strong> {{ preso.rg }}</div>
+                        <div class="col"><strong>UF do RG:</strong> {{ preso.uf_rg }}</div>
+                      </div>
+  
+                      <!-- CPF e CNH -->
+                      <div class="row">
+                        <div class="col"><strong>CPF:</strong> {{ preso.cpf }}</div>
+                        <div class="col"><strong>CNH:</strong> {{ preso.cnh }}</div>
+                      </div>
+  
+                      <!-- NIS e SAP -->
+                      <div class="row">
+                        <div class="col"><strong>NIS:</strong> {{ preso.nis }}</div>
+                        <div class="col"><strong>SAP:</strong> {{ preso.sap }}</div>
+                      </div>
+  
+                      <!-- Tipo de Prisão e Número do Procedimento -->
+                      <div class="row">
+                        <div class="col"><strong>Tipo de Prisão:</strong> {{ preso.razao_prisao }}</div>
+                        <div class="col"><strong>Nº:</strong> {{ preso.numero_procedimento }}</div>
+                      </div>
+  
+                      <!-- Observação -->
+                      <div class="row">
+                        <div class="col-12"><strong>Observação:</strong> {{ preso.observacao }}</div>
+                      </div>
+  
+                      <!-- Cadastrador e Editor -->
+                      <div class="row">
+                        <div class="col"><strong>Cadastrador:</strong> {{ cadastrador.nome_completo | default_if_none:"" }}</div>
+                        <div class="col">
+                          {% if editor %}
+                          <strong>Editor:</strong> {{ editor.nome_completo }}
+                          {% endif %}
                         </div>
-                                                 
+                      </div>
+                    </div>
+  
+                    <!-- Coluna da Direita - Imagens -->
+                    <div class="col-md-6 text-right">
+                      <!-- Perfil Esquerdo -->
+                      {% if preso.perfil_esquerdo %}
+                      <img src="{{ preso.perfil_esquerdo.url }}" alt="Perfil esquerdo" style="width: 30%; margin-right: 0.5%; border: 1px solid #696969;">
+                      {% else %}
+                      <img src="{% static 'dist/img/esquerda.png' %}" alt="Perfil Esquerdo Padrão" style="width: 30%; margin-right: 0.5%; border: 1px solid #696969;">
+                      {% endif %}
+                      
+                      <!-- Frontal -->
+                      {% if preso.frontal %}
+                      <img src="{{ preso.frontal.url }}" alt="Frontal" style="width: 30%; margin-right: 0.5%; border: 1px solid #696969;">
+                      {% else %}
+                      <img src="{% static 'dist/img/frontal.png' %}" alt="Frontal Padrão" style="width: 30%; margin-right: 0.5%; border: 1px solid #696969;">
+                      {% endif %}
+                      
+                      <!-- Perfil Direito -->
+                      {% if preso.perfil_direito %}
+                      <img src="{{ preso.perfil_direito.url }}" alt="Perfil direito" style="width: 30%; border: 1px solid #696969;">
+                      {% else %}
+                      <img src="{% static 'dist/img/direita.png' %}" alt="Perfil Direito Padrão" style="width: 30%; border: 1px solid #696969;">
+                      {% endif %}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -121,6 +134,7 @@
       </div>
     </div>
   </section>
+  
   
 
 
