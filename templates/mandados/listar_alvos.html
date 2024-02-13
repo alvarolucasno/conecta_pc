@@ -65,9 +65,15 @@
                     <img src="{% static 'dist/img/1.png' %}" width="20" height="20">
                     {% endif %}
                   </td>
-                  <td style="display: flex; justify-content: center; align-items: center; text-align:center; vertical-align:middle;" data-order="{% if row.caminho_foto %}1{% else %}0{% endif %}">
-                    <img src="{% if row.caminho_foto %}http://38.242.248.229/static/{{ row.caminho_foto }}{% else %}https://t4.ftcdn.net/jpg/01/18/03/35/240_F_118033506_uMrhnrjBWBxVE9sYGTgBht8S5liVnIeY.jpg{% endif %}" alt="Foto do alvo" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
-                  </td>
+
+                  <td style="display: flex; justify-content: center; align-items: center; text-align:center; vertical-align:middle;" data-order="{% if row.foto %}1{% else %}0{% endif %}">
+                    {% if row.foto %}
+                        <img src="{{ MEDIA_URL }}{{ row.foto }}" alt="Foto" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
+                    {% else %}
+                        <img src="https://t4.ftcdn.net/jpg/01/18/03/35/240_F_118033506_uMrhnrjBWBxVE9sYGTgBht8S5liVnIeY.jpg" alt="Foto Padrão" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
+                    {% endif %}
+                  </td>   
+                                                         
                   <td style="text-align: center; vertical-align: middle;">{% if row.nome is not None %}{{ row.nome }}{% else %}{% endif %}</td>
                   <td style="text-align: center; vertical-align: middle;">{% if row.nomeMae is not None %}{{ row.nomeMae }}{% else %}{% endif %}</td>
                   <td style="text-align: center; vertical-align: middle;">{% if row.nomePai is not None %}{{ row.nomePai }}{% else %}{% endif %}</td>

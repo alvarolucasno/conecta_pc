@@ -1,9 +1,10 @@
 import base64
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
 from django.core.exceptions import ValidationError
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from utils import db_mandados, conector_ftp, salvar_bot_telegram
 from io import BytesIO
 from datetime import datetime
@@ -11,75 +12,96 @@ from django.contrib import messages
 import time
 from tabelas_apoio.models import Cidade
 from servidores.models import Cargo, Servidor
+from mandados.models import Procurados
+from utils.apoio_views import LISTA_DDDS, LISTA_UFS
+from django.core.files.base import ContentFile
+import base64
 
 
 @login_required(login_url='/login/')
 def listar_alvos(request):
-    
-    cpf_do_usuario = request.user.cpf
-    servidor = get_object_or_404(Servidor, cpf=cpf_do_usuario)
-    cargo = get_object_or_404(Cargo, servidor=servidor, cargo_atual=True)
-    foto = servidor.foto
-    nome_completo = request.user.nome_completo.split()
-    user_name = nome_completo[0] + ' ' + nome_completo[-1] if len(nome_completo) >= 2 else nome_completo[0]
 
     mandados = db_mandados.get_mandados()
 
-
-    context = {'user_name': user_name, 'cargo': cargo.cargo, 'foto': foto ,'dados': mandados}
-
-    return render(request, 'mandados/listar_alvos.html', context)
+    return render(request, 'mandados/listar_alvos.html', {'dados': mandados})
 
 @login_required(login_url='/login/')
 def editar_alvo(request, id_pessoa):
     
-    cargo = "Agente de Polícia Civil"
-    nome_completo = request.user.nome_completo.split()
-    user_name = nome_completo[0] + ' ' + nome_completo[-1] if len(nome_completo) >= 2 else nome_completo[0]
-
-    id_usuario = request.user.id
-    cpf_usuario = request.user.cpf
+    nome_completo_cadastrador = request.user.nome_completo
+    cpf_cadastrador = request.user.cpf
     
-    ufs_unicos = Cidade.objects.values_list('sigla_uf', flat=True).distinct()
-    ufs_unicos = sorted(ufs_unicos)
-    
-    id_alvo, nome_alvo = db_mandados.get_name_by_id(id_pessoa)
+    id_foragido, nome_foragido = db_mandados.get_name_by_id(id_pessoa)
     
     if request.method == 'POST':
         try:
-            origem_foto = str(request.POST.get('origemFoto')).strip()
-            nome_alvo = ' '.join(str(request.POST.get('nomeCompleto')).split())
+            origem_foto = request.POST.get('origemFoto')
+            nome_procurado = ' '.join(str(request.POST.get('nomeCompleto')).split())
             dataNascimento = request.POST.get('dataNascimento') if request.POST.get('dataNascimento') else None
             mae = ' '.join(str(request.POST.get('mae')).split())
             pai = ' '.join(str(request.POST.get('pai')).split())
             rg = str(request.POST.get('rg')).strip()
+            uf_rg = str(request.POST.get('uf_rg')).strip()
             cpf = str(request.POST.get('cpf')).replace('.', '').replace('-', '').strip()
             cnh = str(request.POST.get('cnh')).strip()
             nis = str(request.POST.get('nis')).strip()
             sap = str(request.POST.get('sap')).strip()
-            uf_rg = str(request.POST.get('uf_rg')).strip()
-            data_cadastro = datetime.now()
-            morto = request.POST.get('morto')
+            sexo = str(request.POST.get('sexo')).strip()
+            info_morte = request.POST.get('info_morte')
             observacao = str(request.POST.get('observacao')).strip()
-
-            caminho_foto = None
+            image_data = request.POST.get('croppedImage')
             
-            if 'fotografia' in request.FILES:
-                fotografia = request.FILES['fotografia']
-                file_obj = BytesIO(fotografia.read())
-                nome_foto = (f"id_pessoa_bnmp_{id_alvo}_{nome_alvo}_mae_{mae}_dn_{dataNascimento}.jpg").replace(" ", "_")
-                file_obj.seek(0)
-                conector_ftp.enviar_foto_sftp(file_obj, nome_foto, 'fotos_alvos_banco')
-                fotografia.seek(0)
-                foto_base64 = base64.b64encode(fotografia.read()).decode('utf-8')
-                informacao = f"Individuo com mandado de prisão em seu desfavor em {data_cadastro.strftime('%d/%m/%Y')}"
-                salvar_bot_telegram.chamada_api(nome_alvo, dataNascimento, mae, foto_base64, informacao)
+            if image_data:
+                format, imgstr = image_data.split(';base64,')
+                ext = format.split('/')[-1]
+            if imgstr:
+                image = ContentFile(base64.b64decode(imgstr), name=f'{id_pessoa}.{ext}')
 
-                caminho_foto = 'fotos_alvos_banco/' + nome_foto
-
-            db_mandados.save_dados_alvo(id_alvo, nome_alvo, dataNascimento, mae, pai, rg, uf_rg, 
-                                        cpf, cnh, nis, sap, caminho_foto, origem_foto, id_usuario, 
-                                        nome_completo, cpf_usuario, data_cadastro, morto, observacao)
+            procurado, created = Procurados.objects.get_or_create(
+                id_procurado_bnmp = id_pessoa, 
+                defaults={
+                    'origem_foto': origem_foto,
+                    'id_procurado_bnmp': id_pessoa,
+                    'nome_completo': nome_procurado,
+                    'data_nascimento': dataNascimento,
+                    'mae': mae,
+                    'pai': pai,
+                    'rg': rg,
+                    'uf_rg': uf_rg,
+                    'cpf': cpf,
+                    'cnh': cnh,
+                    'nis': nis,
+                    'sap': sap,
+                    'sexo': sexo,
+                    'informacao_morte': info_morte,
+                    'observacao': observacao,
+                    'cpf_cadastrador': cpf_cadastrador,
+                    'nome_cadastrador': nome_completo_cadastrador,
+                    'created_by': request.user,
+                    'foto': image,
+                }
+            )
+              
+            if not created:
+                procurado.origem_foto = origem_foto
+                procurado.nome_completo = nome_procurado
+                procurado.data_nascimento = dataNascimento
+                procurado.mae = mae
+                procurado.pai = pai
+                procurado.rg = rg
+                procurado.uf_rg = uf_rg
+                procurado.cpf = cpf
+                procurado.cnh = cnh
+                procurado.nis = nis
+                procurado.sap = sap
+                procurado.sexo = sexo
+                procurado.informacao_morte = info_morte
+                procurado.observacao = observacao
+                procurado.cpf_cadastrador = cpf_cadastrador
+                procurado.nome_cadastrador = nome_completo_cadastrador
+                procurado.updated_by = request.user
+                procurado.foto = image
+                procurado.save()
               
             messages.success(request, 'Dados salvos com sucesso!')
             return redirect('listar_alvos')
@@ -89,4 +111,4 @@ def editar_alvo(request, id_pessoa):
         except Exception as e:
             messages.error(request, f'Erro ao salvar os dados: {e}')
     
-    return render(request, 'mandados/editar_pessoa.html', {'user_name': user_name, 'cargo': cargo, 'id_alvo': id_alvo, 'nome_alvo': nome_alvo.upper(), 'ufs': ufs_unicos})
+    return render(request, 'mandados/editar_pessoa.html', {'id_alvo': id_foragido, 'nome_alvo': nome_foragido.upper(), 'ufs': LISTA_UFS})

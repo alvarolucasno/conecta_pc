@@ -5,7 +5,7 @@
 {% block title %}Conecta PC | Mandados de Prisão{% endblock %}
 
 {% block extra_head %}
-
+<link rel="stylesheet" href="{% static 'plugins/cropper/cropper.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -23,6 +23,7 @@
       </div>
     </div>
   </div>
+</div>
 
 <section class="content">
   <div class="container-fluid">
@@ -30,126 +31,167 @@
       <div class="col-12">
         <div class="card">
           <div class="card-body">
-              <div class="card card-primary">
-                <div class="card-header">
-                  <h3 class="card-title">Dados de {{ nome_alvo }} ({{ id_alvo }})</h3>
-                </div>
-                <div class="card-body">
-                  <form method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="form-row">
-                      <div class="form-group col-md-4">
-                        <label for="fotografia">Fotografia:</label>
-                        <input type="file" class="form-control" id="fotografia" name="fotografia">
-                      </div>
-                      <div class="form-group col-md-3">
-                        <label for="origemFoto">Origem da Foto:</label>
-                        <select class="form-control" id="origemFoto" name="origemFoto">
-                          <option>Foto não localizada</option>
-                          <option>SAP</option>
-                          <option>PPE PROCEDIMENTO</option>
-                          <option>CNH (PPE)</option>
-                          <option>Intranet (SSP/SE)</option>
-                          <option>SSB/BA</option>
-                          <option>SSB/AL</option>
-                          <option>Outra</option>
-                        </select>
-                      </div>
-                      <div class="form-group col-md-5">
-                        <label for="nomeCompleto">Nome Completo:</label>
-                        <input type="text" class="form-control" id="nomeCompleto" name="nomeCompleto" required>
-                      </div>
-                    </div>
-
-                    <div class="form-row">
-                      <div class="form-group col-md-2">
-                        <label for="dataNascimento">Data de Nascimento:</label>
-                        <input type="date" class="form-control" id="dataNascimento" name="dataNascimento" min="1900-01-01">
-                      </div>
-                      <div class="form-group col-md-4">
-                        <label for="mae">Mãe:</label>
-                        <input type="text" class="form-control" id="mae" name="mae">
-                      </div>
-                      <div class="form-group col-md-4">
-                        <label for="pai">Pai:</label>
-                        <input type="text" class="form-control" id="pai" name="pai">
-                      </div>
-                      <div class="form-group col-md-2">
-                        <label for="cpf">CPF:</label>
-                        <input type="text" class="form-control" id="cpf" name="cpf" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}" title="Por favor, insira o CPF completo...">
-                      </div>
-                    </div>
-
-                    <div class="form-row">
-                      <div class="form-group col-md-2">
-                        <label for="rg">RG:</label>
-                        <input type="text" class="form-control" id="rg" name="rg" pattern="\d*" inputmode="numeric" title="Por favor, insira apenas números.">
-                      </div>
-
-                      <div class="form-group col-md-2">
-                        <label for="uf_rg">UF do RG:</label>
-                        <select class="form-control" id="uf_rg" name="uf_rg">
-                            {% for uf in ufs %}
-                                <option value="{{ uf }}" {% if uf == "SE" %}selected{% endif %}>{{ uf }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-          
-                      <div class="form-group col-md-2">
-                        <label for="cnh">CNH:</label>
-                        <input type="text" class="form-control" id="cnh" name="cnh" pattern="\d*" inputmode="numeric" title="Por favor, insira apenas números.">
-                      </div>
-                      <div class="form-group col-md-2">
-                        <label for="nis">NIS:</label>
-                        <input type="text" class="form-control" id="nis" name="nis" pattern="\d*" inputmode="numeric" title="Por favor, insira apenas números.">
-                      </div>
-                      <div class="form-group col-md-2">
-                        <label for="sap">SAP:</label>
-                        <input type="text" class="form-control" id="sap" name="sap" pattern="\d*" inputmode="numeric" title="Por favor, insira apenas números.">
-                      </div>
-
-                      <div class="form-group col-md-2">
-                        <label for="cadastrador">Informação de Morte:</label>
-                        <select class="form-control" id="morto" name="morto">
-                          <option value="0">Não</option>
-                          <option value="1">Sim</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    <div class="form-row">
-                      <div class="form-group col-md-9">
-                        <label for="observacao">Observação:</label>
-                        <input type="text" class="form-control" id="observacao" name="observacao">
-                      </div>
-                      <div class="form-group col-md-3 d-flex align-items-end justify-content-between">
-                        <button type="submit" class="btn btn-primary" style="width: 48%;">Enviar</button>
-                        <a href="/mandados" class="btn btn-danger" style="width: 48%;">Cancelar</a>
-                      </div>
-                    </div>
-                  </form>
-                </div>
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Dados de {{ nome_alvo }} ({{ id_alvo }})</h3>
               </div>
-              <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-          </form>
-        </div>
-        <!-- /.card-body -->
-      </div>
-      <!-- /.card -->
-    </div>
-    <!-- /.col -->
-  </div>
-  <!-- /.row -->
+              <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <div class="row">
+                    <div class="col-lg-3">
+                      <div class="form-group">
+                        <div class="drop-area" id="dropArea" style="display: flex; flex-direction: column; justify-content: center; align-items: center; border: 2px dashed #ccc; border-radius: 10px; padding: 10px; height: 245px; overflow: hidden;">
+                          {% if preso.frontal %}
+                          <img id="uploadedImage" src="{{ preso.frontal.url }}" alt="Face do Procurado" draggable="true" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                          {% else %}
+                          <img id="uploadedImage" src="{% static 'dist/img/frontal.png' %}" alt="Imagem padrão" draggable="true" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                          {% endif %}
+                          <div>Frontal</div>
+                          <input type="file" id="inputImage" name="image" style="display: none;" />
+                          <input type="hidden" name="croppedImage" id="croppedImage">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="origemFoto" style="text-align: left;">Origem da Foto:</label>
+                        <select class="form-control" id="origemFoto" name="origemFoto" required>
+                          <option value="" disabled selected>Selecione</option>
+                          <option value="Foto não localizada">Foto não localizada</option>
+                          <option value="SAP">SAP</option>
+                          <option value="PPE PROCEDIMENTO">PPE PROCEDIMENTO</option>
+                          <option value="CNH (PPE)">CNH (PPE)</option>
+                          <option value="Intranet (SSP/SE)">Intranet (SSP/SE)</option>
+                          <option value="SSB/BA">SSB/BA</option>
+                          <option value="SSB/AL">SSB/AL</option>
+                          <option value="Outra">Outra</option>
+                        </select>
+                      </div>
+                      
+                    </div>
+                    <div class="col-lg-9">
+                      <input type="hidden" name="id_pessoa" id="id_pessoa" value="{{pessoa.id_pessoa}}">
+                      <div class="row">
+                        <div class="form-group col-lg-7">
+                          <label for="nomeCompleto">Nome Completo:</label>
+                          <input type="text" class="form-control" id="nomeCompleto" name="nomeCompleto" required>
+                        </div>
+                        <div class="form-group col-lg-3">
+                          <label for="dataNascimento">Data de Nascimento:</label>
+                          <input type="date" class="form-control" id="dataNascimento" name="dataNascimento" min="1900-01-01" required>
+                        </div>
+                        <div class="form-group col-lg-2">
+                          <label for="sexo">Sexo:</label>
+                          <select class="form-control" id="sexo" name="sexo" required>
+                            <option value="" disabled selected>Selecione</option>
+                            <option value="M">M</option>
+                            <option value="F">F</option>
+                          </select>
+                        </div>                        
+                        
+                      </div>
+                      <div class="row">
+                        <div class="form-group col-lg-5">
+                          <label for="mae">Mãe:</label>
+                          <input type="text" class="form-control" id="mae" name="mae" required>
+                        </div>
+                        <div class="form-group col-lg-4">
+                          <label for="pai">Pai:</label>
+                          <input type="text" class="form-control" id="pai" name="pai">
+                        </div>
+                        <div class="form-group col-lg-3">
+                          <label for="cpf">CPF:</label>
+                          <input type="text" class="form-control" id="cpf" name="cpf" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}" title="Por favor, insira o CPF completo...">
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="form-group col-lg-3">
+                          <label for="rg">RG:</label>
+                          <input type="text" class="form-control" id="rg" name="rg" pattern="\d*" inputmode="numeric" title="Por favor, insira apenas números.">
+                        </div>
+                        <div class="form-group col-lg-3">
+                          <label for="uf_rg">UF do RG:</label>
+                          <select class="form-control" id="uf_rg" name="uf_rg">
+                            <option disabled selected>Selecione</option>
+                            {% for uf, nome in ufs %}
+                            <option value="{{ uf }}">{{ nome }}</option>
+                            {% endfor %}
+                          </select>
+                        </div>                                          
+                        <div class="form-group col-md-2">
+                          <label for="cnh">CNH:</label>
+                          <input type="text" class="form-control" id="cnh" name="cnh" pattern="\d*" inputmode="numeric" title="Por favor, insira apenas números.">
+                        </div>
+                        <div class="form-group col-md-2">
+                          <label for="nis">NIS:</label>
+                          <input type="text" class="form-control" id="nis" name="nis" pattern="\d*" inputmode="numeric" title="Por favor, insira apenas números.">
+                        </div>
+                        <div class="form-group col-md-2">
+                          <label for="sap">SAP:</label>
+                          <input type="text" class="form-control" id="sap" name="sap" pattern="\d*" inputmode="numeric" title="Por favor, insira apenas números.">
+                        </div>
+                      </div>
+                      <div class="form-row">
+                        <div class="form-group col-lg-3">
+                          <label for="info_morte">Informação de Morte:</label>
+                          <select class="form-control" id="info_morte" name="info_morte" required>
+                            <option value="0">Não</option>
+                            <option value="1">Sim</option>
+                          </select>
+                        </div>
+                        <div class="form-group col-lg-9">
+                          <label for="observacao">Observação:</label>
+                          <input type="text" class="form-control" id="observacao" name="observacao">
+                        </div>
+                      </div>
 
-<!-- /.container-fluid -->
+                      <div class="button-group d-flex pt-15 justify-content-end">
+                        <button class="btn btn-success" style="width: 100px; margin-right: 5px;"><i class="fas fa-save"></i> Salvar</button>
+                        <button class="btn btn-danger" style="width: 100px;"><i class="fas fa-times"></i> Cancelar</button>
+                      </div>
+
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
-<!-- /.content -->
+
+<div class="modal fade" id="cropperModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog" role="document" style="max-height: 90%;">
+    <div class="modal-content" style="padding: 10px;">
+      <div class="modal-header" style="padding: 10px;">
+        <h5 class="modal-title" id="modalLabel">Formate a imagem</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body" style="max-height: 600px; overflow-y: auto; padding: 10px;">
+        <div class="img-container">
+          <img id="image" src="" style="max-height: 700px; width: auto; height: auto;">
+        </div>
+      </div>
+      <div class="modal-footer" style="padding: 10px;">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" id="cropAndUpload">Salvar</button>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}
 
+
+
 {% block extra_scripts %}
+
+<script src="{% static 'plugins/cropper/jquery.min.js' %}" crossorigin="anonymous"></script>
+<script src="{% static 'plugins/cropper/bootstrap.bundle.min.js' %}" crossorigin="anonymous"></script>
+<script src="{% static 'plugins/cropper/cropper.js' %}"></script>
+
 <script>
     
   document.addEventListener("DOMContentLoaded", function() {
@@ -241,6 +283,75 @@
       e.target.value = formattedDate;
     }
   });
+</script>
+
+<script>
+  // Função para processar o arquivo para a área de drop única
+  function processFile(file) {
+      if (file && /^image\/\w+/.test(file.type)) {
+          var reader = new FileReader();
+          reader.onload = function (e) {
+              document.getElementById('image').src = e.target.result;
+              $('#cropperModal').modal('show');
+          };
+          reader.readAsDataURL(file);
+          document.getElementById('inputImage').files = [file];
+      } else {
+          window.alert('Por favor, selecione um arquivo de imagem.');
+      }
+  }
+
+  // Configuração de eventos para a área de drop única
+  let dropArea = document.getElementById('dropArea');
+  let inputImage = document.getElementById('inputImage');
+
+  dropArea.onclick = function () {
+      inputImage.click();
+  };
+
+  dropArea.addEventListener('dragover', function (e) {
+      e.preventDefault();
+  });
+
+  dropArea.addEventListener('drop', function (e) {
+      e.preventDefault();
+      processFile(e.dataTransfer.files[0]);
+  });
+
+  inputImage.addEventListener('change', function (event) {
+      processFile(event.target.files[0]);
+  });
+
+  // Modal Cropper.js
+  var cropper;
+  $('#cropperModal').on('shown.bs.modal', function () {
+      cropper = new Cropper(document.getElementById('image'), {
+          aspectRatio: 3 / 4,
+          viewMode: 1
+      });
+  }).on('hidden.bs.modal', function () {
+      cropper.destroy();
+      cropper = null;
+      // Resetando o valor do input para permitir o mesmo arquivo ser selecionado novamente
+      document.getElementById('inputImage').value = '';
+  });
+
+  // Manipulação do evento de corte e upload
+  document.getElementById('cropAndUpload').addEventListener('click', function () {
+      if (cropper) {
+          cropper.getCroppedCanvas().toBlob(function (blob) {
+              var reader = new FileReader();
+              reader.onload = function (e) {
+                  document.getElementById('uploadedImage').src = e.target.result;
+                  $('#cropperModal').modal('hide');
+                  // Aqui você pode fazer o upload do blob ou usar o base64 conforme necessário
+                  document.getElementById('croppedImage').value = e.target.result; // Armazenando base64
+              };
+              reader.readAsDataURL(blob);
+          });
+      }
+  });
+
 </script>
 
 {% endblock %}
