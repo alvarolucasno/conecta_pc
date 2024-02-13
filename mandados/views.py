@@ -51,8 +51,6 @@ def editar_alvo(request, id_pessoa):
             observacao = str(request.POST.get('observacao')).strip()
             image_data = request.POST.get('croppedImage', None)
             
-            print(image_data)
-            
             if image_data:
                 format, imgstr = image_data.split(';base64,')
                 ext = format.split('/')[-1]
