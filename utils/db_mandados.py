@@ -37,7 +37,7 @@ def get_mandados():
                     IF(d.id_procurado_bnmp IS NOT NULL, 1, 0) AS dado_detalhado,
                     d.avatar
                 FROM 
-                    mandados_bnmp.mandados_prisao_criminais_sergipe AS m
+                    mandados_bnmp.alvos_mandados_sergipe AS m
                 LEFT JOIN conecta_pc_desenvolvimento.mandados_procurados AS d
                     ON m.id_pessoa = d.id_procurado_bnmp
                 INNER JOIN (
@@ -45,7 +45,7 @@ def get_mandados():
                         id_pessoa,
                         MAX(id_documento) AS id_documentoMaximo
                     FROM 
-                        mandados_bnmp.mandados_prisao_criminais_sergipe
+                        mandados_bnmp.alvos_mandados_sergipe
                     GROUP BY 
                         id_pessoa
                 ) AS subconsulta 
