@@ -35,7 +35,7 @@ def get_mandados():
                     DATE_FORMAT(IFNULL(d.data_nascimento, m.dataNascimento), '%d/%m/%Y') AS dataNascimento,
                     DATE_FORMAT(m.dataExpedicao, '%d/%m/%Y %H:%i') AS dataExpedicaoFormatada,
                     IF(d.id_procurado_bnmp IS NOT NULL, 1, 0) AS dado_detalhado,
-                    d.foto
+                    d.avatar
                 FROM 
                     mandados_bnmp.mandados_prisao_criminais_sergipe AS m
                 LEFT JOIN conecta_pc_desenvolvimento.mandados_procurados AS d
