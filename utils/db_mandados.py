@@ -38,7 +38,7 @@ def get_mandados():
                     d.avatar
                 FROM 
                     mandados_bnmp.alvos_mandados_sergipe AS m
-                LEFT JOIN conecta_pc_desenvolvimento.mandados_procurados AS d
+                LEFT JOIN conecta_pc.mandados_procurados AS d
                     ON m.id_pessoa = d.id_procurado_bnmp
                 INNER JOIN (
                     SELECT 
