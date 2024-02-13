@@ -49,13 +49,17 @@ def editar_alvo(request, id_pessoa):
             sexo = str(request.POST.get('sexo')).strip()
             info_morte = request.POST.get('info_morte')
             observacao = str(request.POST.get('observacao')).strip()
-            image_data = request.POST.get('croppedImage')
+            image_data = request.POST.get('croppedImage', None)
+            
+            print(image_data)
             
             if image_data:
                 format, imgstr = image_data.split(';base64,')
                 ext = format.split('/')[-1]
-            if imgstr:
-                image = ContentFile(base64.b64decode(imgstr), name=f'{id_pessoa}.{ext}')
+                if imgstr:
+                    image = ContentFile(base64.b64decode(imgstr), name=f'{id_pessoa}.{ext}')
+            else:
+                image = None
 
             procurado, created = Procurados.objects.get_or_create(
                 id_procurado_bnmp = id_pessoa, 

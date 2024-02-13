@@ -66,7 +66,7 @@ def get_name_by_id(id):
             SELECT DISTINCT
                 id_pessoa,
                 outrosNomes as nome_pesssoa
-            FROM mandados_bnmp.mandados_prisao_criminais_sergipe
+            FROM mandados_bnmp.alvos_mandados_sergipe
             WHERE id_pessoa = %s;
             '''
             cursor.execute(query, (id,))
