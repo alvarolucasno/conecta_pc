@@ -29,7 +29,7 @@ def reconhecer_face(imagem_bytes):
 
     response = client.search_faces_by_image(CollectionId=settings.AWS_COLLECTION_ID,
                                             Image={'Bytes': imagem_bytes},
-                                            FaceMatchThreshold=70)
+                                            FaceMatchThreshold=80)
 
     face_matches = response['FaceMatches']
 
