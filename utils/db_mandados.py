@@ -1,4 +1,5 @@
 import mysql.connector
+from django.conf import settings
 
 DB_CONFIG = {
     'host': '38.242.248.229',
@@ -7,25 +8,27 @@ DB_CONFIG = {
     'database': 'mandados_bnmp'
 }
 
+database = settings.DATABASES['default']['NAME']
+
 def get_mandados():
     with mysql.connector.connect(**DB_CONFIG) as conn:
         with conn.cursor() as cursor:
-            query = '''
+            query = f'''
                 SELECT
                     mandados_bnmp.pessoas.id_pessoa AS id_pessoa,
-                    COALESCE(conecta_pc.mandados_procurados.nome_completo, mandados_bnmp.pessoas.outrosNomes) AS nome,
-                    COALESCE(conecta_pc.mandados_procurados.mae, mandados_bnmp.pessoas.nomeMae) AS nomeMae,
-                    COALESCE(conecta_pc.mandados_procurados.pai, mandados_bnmp.pessoas.nomePai) AS nomePai,
-                    COALESCE(conecta_pc.mandados_procurados.rg, mandados_bnmp.pessoas.rg) AS rg,
-                    COALESCE(conecta_pc.mandados_procurados.cpf, mandados_bnmp.pessoas.cpf) AS cpf,
+                    COALESCE({database}.mandados_procurados.nome_completo, mandados_bnmp.pessoas.outrosNomes) AS nome,
+                    COALESCE({database}.mandados_procurados.mae, mandados_bnmp.pessoas.nomeMae) AS nomeMae,
+                    COALESCE({database}.mandados_procurados.pai, mandados_bnmp.pessoas.nomePai) AS nomePai,
+                    COALESCE({database}.mandados_procurados.rg, mandados_bnmp.pessoas.rg) AS rg,
+                    COALESCE({database}.mandados_procurados.cpf, mandados_bnmp.pessoas.cpf) AS cpf,
                     CASE 
                         WHEN mandados_bnmp.pessoas.sexo = 'Masculino' THEN 'M'
                         WHEN mandados_bnmp.pessoas.sexo = 'Feminino' THEN 'F'
                     END AS sexo,
-                    COALESCE(DATE_FORMAT(conecta_pc.mandados_procurados.data_nascimento, '%d/%m/%Y'), mandados_bnmp.pessoas.dataNascimento) AS dataNascimento,
+                    COALESCE(DATE_FORMAT({database}.mandados_procurados.data_nascimento, '%d/%m/%Y'), mandados_bnmp.pessoas.dataNascimento) AS dataNascimento,
                     MAX(mandados_bnmp.documentos.dataExpedicao) AS dataExpedicao,
-                    IF(conecta_pc.mandados_procurados.id_procurado_bnmp IS NOT NULL, 1, 0) AS dado_detalhado,
-                    conecta_pc.mandados_procurados.avatar
+                    IF({database}.mandados_procurados.id_procurado_bnmp IS NOT NULL, 1, 0) AS dado_detalhado,
+                    {database}.mandados_procurados.avatar
                 FROM mandados_bnmp.pessoas
                 LEFT JOIN mandados_bnmp.documentos
                     ON mandados_bnmp.pessoas.id_pessoa = mandados_bnmp.documentos.id_pessoa
@@ -33,8 +36,8 @@ def get_mandados():
                     ON mandados_bnmp.documentos.id_orgaoUsuarioCriador = mandados_bnmp.orgaoUsuarioCriador.id_orgaoUsuarioCriador
                 LEFT JOIN mandados_bnmp.enderecos_pessoas
                     ON mandados_bnmp.pessoas.id_pessoa = mandados_bnmp.enderecos_pessoas.id_pessoa
-                LEFT JOIN conecta_pc.mandados_procurados
-                    ON mandados_bnmp.pessoas.id_pessoa = conecta_pc.mandados_procurados.id_procurado_bnmp
+                LEFT JOIN {database}.mandados_procurados
+                    ON mandados_bnmp.pessoas.id_pessoa = {database}.mandados_procurados.id_procurado_bnmp
                 WHERE mandados_bnmp.documentos.valido = 1
                 AND (mandados_bnmp.orgaoUsuarioCriador.uf = "Sergipe" or mandados_bnmp.enderecos_pessoas.uf = "Sergipe")
                 GROUP BY mandados_bnmp.pessoas.id_pessoa

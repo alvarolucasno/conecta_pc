@@ -73,7 +73,7 @@ def cadastrar_preso(request):
                 mae=' '.join(request.POST.get('mae', '').split()),
                 pai=' '.join(request.POST.get('pai', '').split()),
                 rg=request.POST.get('rg', '').strip(),
-                uf_rg=request.POST.get('uf_rg'),
+                uf_rg = None if request.POST.get('uf_rg') in ["None", "none"] else request.POST.get('uf_rg'),
                 cpf=request.POST.get('cpf', '').replace('.', '').replace('-', ''),
                 cnh=request.POST.get('cnh', '').strip(),
                 nis=request.POST.get('nis', '').strip(),
@@ -105,8 +105,6 @@ def cadastrar_preso(request):
             if imagens_processadas:
                 novo_preso.save()
             
-            informacao = f"Individuo preso em virtude do(a) {novo_preso.razao_prisao} nº {novo_preso.numero_procedimento}"
-            #salvar_bot_telegram.chamada_api(novo_preso.nome_completo, novo_preso.data_nascimento, novo_preso.mae, (request.POST.get(f'croppedImage{2}').split(';base64,')[1]), informacao)
             messages.success(request, 'Dados salvos com sucesso!')
             return redirect('listar_presos')
         
@@ -144,7 +142,7 @@ def editar_preso(request, preso_id):
             preso.mae = ' '.join(request.POST.get('mae', '').split())
             preso.pai = ' '.join(request.POST.get('pai', '').split())
             preso.rg = request.POST.get('rg', '').strip()
-            preso.uf_rg = request.POST.get('uf_rg')
+            preso.uf_rg = None if request.POST.get('uf_rg') in ["None", "none"] else request.POST.get('uf_rg')
             preso.cpf = request.POST.get('cpf', '').replace('.', '').replace('-', '')
             preso.cnh = request.POST.get('cnh', '').strip()
             preso.nis = request.POST.get('nis', '').strip()

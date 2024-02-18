@@ -7,6 +7,8 @@ from io import BytesIO
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 
+from reconhecimento_facial.utils import adicionar_face, remover_face
+
 def upload_to_perfil_esquerdo(instance, filename):
     return f'presos/{slugify(instance.nome_completo)}_mae_{slugify(instance.mae)}/{instance.data_fotos}_perfil_esquerdo.jpg'
 
@@ -23,6 +25,7 @@ class Preso(models.Model):
     # Fotos
     perfil_esquerdo = models.ImageField(upload_to=upload_to_perfil_esquerdo, max_length=255)
     frontal = models.ImageField(upload_to=upload_to_frontal, max_length=255)
+    face_id_aws = models.CharField(max_length=255, blank=True, null=True)
     avatar = models.ImageField(upload_to=upload_to_avatar, null=True, blank=True, max_length=255)
     perfil_direito = models.ImageField(upload_to=upload_to_perfil_direito, max_length=255)
     
@@ -67,38 +70,57 @@ class Preso(models.Model):
         return self.nome_completo
     
     def save(self, *args, **kwargs):
-        # Verificar se as imagens foram atualizadas
+        
+        novo_face_id = None
+
+        if self.frontal:
+            in_memory_file = BytesIO(self.frontal.read())
+            imagem_bytes = in_memory_file.getvalue()
+            
+            try:
+                reconhecido, novo_face_id = adicionar_face(imagem_bytes)
+            except ValueError as e:
+                raise e
+            except Exception as e:
+                raise e
+
         if self.pk:
             old_preso = Preso.objects.get(pk=self.pk)
 
-            # Excluir imagens antigas se foram atualizadas
-            if old_preso.perfil_esquerdo != self.perfil_esquerdo and old_preso.perfil_esquerdo:
+            if self.perfil_esquerdo and old_preso.perfil_esquerdo:
                 default_storage.delete(old_preso.perfil_esquerdo.path)
                 self.compress_image(self.perfil_esquerdo)
             
-            if old_preso.frontal != self.frontal and old_preso.frontal:
+            if self.frontal and old_preso.frontal:
                 default_storage.delete(old_preso.frontal.path)
+                
                 if old_preso.avatar:
                     default_storage.delete(old_preso.avatar.path)
+                    
+                if old_preso.face_id_aws:
+                    remover_face(old_preso.face_id_aws)
+                    
                 self.compress_image(self.frontal)
             
-            if old_preso.perfil_direito != self.perfil_direito and old_preso.perfil_direito:
+            if self.perfil_direito and old_preso.perfil_direito:
                 default_storage.delete(old_preso.perfil_direito.path)
                 self.compress_image(self.perfil_direito)
+                
+            if novo_face_id:
+                self.face_id_aws = novo_face_id 
 
         else:
-            # Novo objeto, processar todas as imagens
             if self.perfil_esquerdo:
                 self.compress_image(self.perfil_esquerdo)
             if self.frontal:
                 self.compress_image(self.frontal)
             if self.perfil_direito:
                 self.compress_image(self.perfil_direito)
+            if novo_face_id:
+                self.face_id_aws = novo_face_id
 
-        # Salvar o objeto para garantir que todas as imagens sejam atualizadas
         super().save(*args, **kwargs)
 
-        # Sempre criar um novo avatar se houver uma imagem frontal
         if self.frontal:
             if self.avatar:
                 default_storage.delete(self.avatar.path)

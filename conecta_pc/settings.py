@@ -11,6 +11,8 @@ DATA_DIR = BASE_DIR / 'data' / 'web'
 dotenv_path = os.path.join(BASE_DIR, 'dotenv_files', '.env')
 load_dotenv()
 
+AWS_COLLECTION_ID = os.getenv('AWS_COLLECTION_ID')
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY', 'change-me')
 
@@ -36,6 +38,7 @@ INSTALLED_APPS = [
     'presos',
     'tabelas_apoio',
     'servidores',
+    'reconhecimento_facial',
 ]
 
 MIDDLEWARE = [

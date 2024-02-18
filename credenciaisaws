@@ -1,0 +1,10 @@
+o seu computador local
+Encontre os arquivos de configuração e credenciais da AWS.
+
+Baseado na saída do comando aws configure list que você forneceu, suas credenciais estão armazenadas nos seguintes arquivos no seu sistema local (Windows):
+
+Credenciais: notepad C:\Users\ALVAR\.aws\credentials
+Configuração: notepad C:\Users\ALVAR\.aws\config
+Acesse e copie o conteúdo desses arquivos.
+
+Abra esses arquivos com um editor de texto para visualizar e copiar o conteúdo. Eles armazenam suas credenciais de acesso (access_key e secret_key) e a configuração regional (region), entre outras configurações possíveis.

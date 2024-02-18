@@ -13,4 +13,5 @@ urlpatterns = [
     path('mandados/', include('mandados.urls')),
     path('presos/', include('presos.urls')),
     path('servidores/', include('servidores.urls')),
+    path('reconhecimento_facial/', include('reconhecimento_facial.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

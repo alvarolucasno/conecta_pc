@@ -1,4 +1,5 @@
 from django.db import models
+from reconhecimento_facial.utils import adicionar_face, remover_face
 
 # Create your models here.
 import os
@@ -22,6 +23,7 @@ def upload_avatar(instance, filename):
 
 class Procurados(models.Model):
     foto = models.ImageField(upload_to=upload_face, null=True, blank=True)
+    face_id_aws = models.CharField(max_length=255, blank=True, null=True)
     avatar = models.ImageField(upload_to=upload_avatar, null=True, blank=True)
     origem_foto = models.CharField(max_length=255, blank=True, null=True)
     id_procurado_bnmp = models.BigIntegerField(unique=True)
@@ -52,26 +54,43 @@ class Procurados(models.Model):
         return self.nome_completo
     
     def save(self, *args, **kwargs):
+        novo_face_id = None
+
+        if self.foto:
+            in_memory_file = BytesIO(self.foto.read())
+            imagem_bytes = in_memory_file.getvalue()
+            
+            try:
+                reconhecido, novo_face_id = adicionar_face(imagem_bytes)
+            except ValueError as e:
+                raise e
+            except Exception as e:
+                raise e
+        
         if self.pk:
             if 'update_fields' not in kwargs or 'foto' in kwargs.get('update_fields', []):
                 self.update_image_files()
-
+                if novo_face_id:
+                    self.face_id_aws = novo_face_id 
         else:
             if self.foto:
                 self.compress_image(self.foto)
                 self.create_avatar()
+                if novo_face_id:
+                    self.face_id_aws = novo_face_id
 
         super().save(*args, **kwargs)
-        
+
     def update_image_files(self):
         old_instance = Procurados.objects.get(pk=self.pk)
-        if old_instance.foto.name != self.foto.name:
-            if old_instance.foto:
-                default_storage.delete(old_instance.foto.path)
-            if old_instance.avatar:
-                default_storage.delete(old_instance.avatar.path)
-            self.compress_image(self.foto)
-            self.create_avatar()
+        if old_instance.foto:
+            default_storage.delete(old_instance.foto.path)
+            if old_instance.face_id_aws:
+                remover_face(old_instance.face_id_aws)
+        if old_instance.avatar:
+            default_storage.delete(old_instance.avatar.path)
+        self.compress_image(self.foto)
+        self.create_avatar()
 
     def compress_image(self, image_field):
         with Image.open(image_field) as image:

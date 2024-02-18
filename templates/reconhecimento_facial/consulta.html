@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload de Foto para Reconhecimento AWS</title>
+</head>
+<body>
+
+<h2>Enviar Foto para Reconhecimento</h2>
+
+<form action="#" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label for="foto">Escolha uma foto:</label>
+    <input type="file" id="foto" name="foto" accept="image/*" required>
+    <br><br>
+    <input type="submit" value="Enviar Foto">
+</form>
+
+</body>
+</html>
