@@ -87,14 +87,17 @@ class Preso(models.Model):
         if self.pk:
             old_preso = Preso.objects.get(pk=self.pk)
 
-            if self.perfil_esquerdo and old_preso.perfil_esquerdo:
-                default_storage.delete(old_preso.perfil_esquerdo.path)
+            #ESSA COMPARAÇÃO É UTILIZADA PRA SABER SE TEM NOVO ARQUIVO SENDO PASSADO
+            if old_preso.perfil_esquerdo != self.perfil_esquerdo and old_preso.perfil_esquerdo:
+                if default_storage.exists(old_preso.perfil_esquerdo.path):
+                    default_storage.delete(old_preso.perfil_esquerdo.path)
                 self.compress_image(self.perfil_esquerdo)
             
-            if self.frontal and old_preso.frontal:
-                default_storage.delete(old_preso.frontal.path)
+            if old_preso.frontal != self.frontal and old_preso.frontal:
+                if default_storage.exists(old_preso.frontal.path):
+                    default_storage.delete(old_preso.frontal.path)
                 
-                if old_preso.avatar:
+                if old_preso.avatar and default_storage.exists(old_preso.avatar.path):
                     default_storage.delete(old_preso.avatar.path)
                     
                 if old_preso.face_id_aws:
@@ -102,8 +105,9 @@ class Preso(models.Model):
                     
                 self.compress_image(self.frontal)
             
-            if self.perfil_direito and old_preso.perfil_direito:
-                default_storage.delete(old_preso.perfil_direito.path)
+            if old_preso.perfil_direito != self.perfil_direito and old_preso.perfil_direito:
+                if default_storage.exists(old_preso.perfil_direito.path):
+                    default_storage.delete(old_preso.perfil_direito.path)
                 self.compress_image(self.perfil_direito)
                 
             if novo_face_id:
